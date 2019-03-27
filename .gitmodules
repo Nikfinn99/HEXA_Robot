@@ -1,0 +1,6 @@
+[submodule "lib/SerialStream"]
+	path = lib/SerialStream
+	url = https://github.com/Nikfinn99/SerialStream.git
+[submodule "lib/Point"]
+	path = lib/Point
+	url = https://github.com/Nikfinn99/Point.git
