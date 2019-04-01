@@ -77,7 +77,7 @@ void servosReset(PWMServo *(&servos)[size])
  * @param p Point of desired leg position
  * @return corrected leg length
 */
-float servoComputeRotatedLength(Point &p)
+float servoComputeRotatedLength(const Point &p)
 {
     return sqrt(sq(p.x) + sq(p.y));
 }
@@ -90,7 +90,7 @@ float servoComputeRotatedLength(Point &p)
  * @param length2 length of second leg component
  * @return computed angle for outmost servo
 */
-float servoComputeAngle3(Point &p, float length1, float length2)
+float servoComputeAngle3(const Point &p, float length1, float length2)
 {
     float leg_length = servoComputeRotatedLength(p);
     float zahler = sq(leg_length) + sq(p.z) - sq(length1) - sq(length2);
@@ -107,7 +107,7 @@ float servoComputeAngle3(Point &p, float length1, float length2)
  * @param angle3 computation depends on the angle of the outmost servo
  * @return computed angle for middle servo
 */
-float servoComputeAngle2(Point &p, float length1, float length2)
+float servoComputeAngle2(const Point &p, float length1, float length2)
 {
     float angle3 = servoComputeAngle3(p, length1, length2);
     float leg_length = servoComputeRotatedLength(p);
@@ -124,7 +124,7 @@ float servoComputeAngle2(Point &p, float length1, float length2)
  * @param p Point objet of desired leg position
  * @return computed angle for inner servo
 */
-float servoComputeAngle1(Point &p)
+float servoComputeAngle1(const Point &p)
 {
     return atan2(p.y, p.x);
 }
@@ -135,7 +135,7 @@ float servoComputeAngle1(Point &p)
  * @param angle angle to limit
  * @return limited angle
 */
-float servoLimitAngle(float angle)
+float servoLimitAngle(const float angle)
 {
     if (angle > 180.0f)
         return 180.0f;
@@ -145,27 +145,17 @@ float servoLimitAngle(float angle)
 }
 
 /**
- * Compute all angles for one leg from specified point
+ * map input angles to output according to min and max defines
  * 
- * @param p Point of destination
- * @param offset length of mounting axis
- * @param length1 length of first leg component
- * @param length2 length of second leg component
- * @return angles as Point object
+ * @param p input angles
+ * @return mapped angles
 */
-Point servoComputeAllAngles(Point p, float offset, float length1, float length2)
+Point &servoMapAngles(Point &p)
 {
-    Point angles;
-
-    angles.a1 = SERVO_INV_ANG_1 * degrees(servoComputeAngle1(p));
-    angles.a2 = SERVO_INV_ANG_2 * degrees(servoComputeAngle2(p, length1, length2));
-    angles.a3 = SERVO_INV_ANG_3 * degrees(servoComputeAngle3(p, length1, length2));
-
-    angles.a1 = servoLimitAngle(angles.a1 + SERVO_ANGLE_1);
-    angles.a2 = servoLimitAngle(angles.a2 + SERVO_ANGLE_2);
-    angles.a3 = servoLimitAngle(angles.a3 + SERVO_ANGLE_3);
-
-    return angles;
+    p.x = map(p.x, 0, 180, SERVO_MIN_1, SERVO_MAX_1);
+    p.y = map(p.y, 0, 180, SERVO_MIN_2, SERVO_MAX_2);
+    p.z = map(p.z, 0, 180, SERVO_MIN_3, SERVO_MAX_3);
+    return p;
 }
 
 /**
@@ -175,7 +165,46 @@ Point servoComputeAllAngles(Point p, float offset, float length1, float length2)
  * @param (prefix) label to identify origin
  * @return void
 */
-void servoPrintAngles(Point angles, const char *prefix = "")
+void servoPrintAngles(const Point &angles, const char *prefix = "")
 {
     Serial << "Angles " << prefix << ":" << angles << endl;
+}
+/**
+ * Compute all angles for one leg from specified point
+ * 
+ * @param p Point of destination
+ * @param offset length of mounting axis
+ * @param length1 length of first leg component
+ * @param length2 length of second leg component
+ * @return angles as Point object
+*/
+Point servoComputeAllAngles(const Point &p, float offset, float length1, float length2)
+{
+    Point angles;
+
+    angles.a1 = SERVO_INV_ANG_1 * degrees(servoComputeAngle1(p));
+    angles.a2 = SERVO_INV_ANG_2 * degrees(servoComputeAngle2(p, length1, length2));
+    angles.a3 = SERVO_INV_ANG_3 * degrees(servoComputeAngle3(p, length1, length2));
+
+    //servoPrintAngles(angles);
+
+    angles.a1 += SERVO_ANGLE_1;
+    angles.a2 += SERVO_ANGLE_2;
+    angles.a3 += SERVO_ANGLE_3;
+
+    return angles;
+}
+
+/**
+ * Move servos to specified angles and limit between 0 and 180 degrees
+ * 
+ * @param servos array of pointers to servos which should be moved
+ * @param angles Point of target angles
+*/
+void servoMoveAngle(PWMServo *(&servos)[3], Point angles)
+{
+    servoMapAngles(angles);
+    servos[0]->write(servoLimitAngle(angles.a1));
+    servos[1]->write(servoLimitAngle(angles.a2));
+    servos[2]->write(servoLimitAngle(angles.a3));
 }
