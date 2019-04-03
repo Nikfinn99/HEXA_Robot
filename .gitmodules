@@ -4,3 +4,6 @@
 [submodule "lib/Point"]
 	path = lib/Point
 	url = https://github.com/Nikfinn99/Point.git
+[submodule "lib/Filter"]
+	path = lib/Filter
+	url = https://github.com/Nikfinn99/Filter.git

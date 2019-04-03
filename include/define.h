@@ -1,26 +1,19 @@
 #pragma once
 
 // define reset positions for servos
-#define SERVO_ANGLE_1 80 
-#define SERVO_ANGLE_2 75
-#define SERVO_ANGLE_3 65
+#define SERVO_ANGLE_1 90 
+#define SERVO_ANGLE_2 90
+#define SERVO_ANGLE_3 155
 
 // define leg lengths
-#define LEG_OFFS 68
-#define LEG_LEN_1 92
-#define LEG_LEN_2 103
+#define LEG_OFFS 50
+#define LEG_LEN_1 109
+#define LEG_LEN_2 115
 
 // define if servo angle should be inverted
 #define SERVO_INV_ANG_1 -1
 #define SERVO_INV_ANG_2 1
-#define SERVO_INV_ANG_3 1
-
-#define SERVO_MIN_1 0
-#define SERVO_MAX_1 180
-#define SERVO_MIN_2 0
-#define SERVO_MAX_2 180
-#define SERVO_MIN_3 0
-#define SERVO_MAX_3 180
+#define SERVO_INV_ANG_3 -1
 
 // define pins for servos
 #define SERVO_FR_1 1
