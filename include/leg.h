@@ -14,6 +14,7 @@ private:
   Point last_position;
   bool valid_point = false;
   FilterLinear filter_x, filter_y, filter_z;
+  bool is_left;
 
   /**
    * set target of filters according to last_position
@@ -30,13 +31,9 @@ private:
   }
 
 public:
-  Leg(PWMServo *(&servos)[3], float offset, float length1, float length2, float speed = 200)
-      : servos(servos), offset(offset), length1(length1), length2(length2)
-  {
-    filter_x.init(0, speed);
-    filter_y.init(0, speed);
-    filter_z.init(0, speed);
-  }
+  Leg(PWMServo *(&servos)[3], float offset, float length1, float length2, bool left = false)
+      : servos(servos), offset(offset), length1(length1), length2(length2), is_left(left) {}
+
   ~Leg() {}
 
   /**
@@ -48,6 +45,19 @@ public:
     filter_x.setTimeParameter(speed);
     filter_y.setTimeParameter(speed);
     filter_z.setTimeParameter(speed);
+  }
+
+  /**
+   * set starting position of leg
+   * initialize filter with starting position
+  */
+  void setInitialPose(Point p)
+  {
+    last_position = p;
+
+    filter_x.setStartValue(p.x);
+    filter_y.setStartValue(p.y);
+    filter_z.setStartValue(p.z);
   }
 
   /**
@@ -95,9 +105,13 @@ public:
     angles.a3 = 120 * SERVO_INV_ANG_3 + SERVO_ANGLE_3;
 
     // apply fast movement
-    servoMoveAngle(servos, angles);
+    servoMoveAngle(servos, angles, is_left);
   }
 
+  /**
+   * update method for leg
+   * updates filters and if point is valid moves to interpolated point 
+  */
   void update()
   {
     // update filters
@@ -115,7 +129,7 @@ public:
 
       Point angles = servoComputeAllAngles(p, offset, length1, length2);
 
-      servoMoveAngle(servos, angles);
+      servoMoveAngle(servos, angles, is_left);
     }
   }
 };
