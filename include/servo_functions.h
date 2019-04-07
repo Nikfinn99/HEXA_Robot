@@ -170,18 +170,9 @@ Point servoComputeAllAngles(const Point &p, float offset, float length1, float l
 {
     Point angles;
 
-    angles.a1 = SERVO_INV_ANG_1 * degrees(servoComputeAngle1(p));
-    angles.a2 = SERVO_INV_ANG_2 * degrees(servoComputeAngle2(p, offset, length1, length2));
-    angles.a3 = SERVO_INV_ANG_3 * degrees(servoComputeAngle3(p, offset, length1, length2));
-
-    //Serial << endl;
-    //servoPrintAngles(angles);
-
-    angles.a1 += SERVO_ANGLE_1;
-    angles.a2 += SERVO_ANGLE_2;
-    angles.a3 += SERVO_ANGLE_3;
-
-    //servoPrintAngles(angles);
+    angles.a1 = degrees(servoComputeAngle1(p));
+    angles.a2 = degrees(servoComputeAngle2(p, offset, length1, length2));
+    angles.a3 = degrees(servoComputeAngle3(p, offset, length1, length2));
 
     return angles;
 }
@@ -191,9 +182,29 @@ Point servoComputeAllAngles(const Point &p, float offset, float length1, float l
  * 
  * @param servos array of pointers to servos which should be moved
  * @param angles Point of target angles
+ * @param (left) if leg is on the left side of robot
+ * @param (transform_angles) if method should invert and offset angles
 */
-void servoMoveAngle(PWMServo *(&servos)[3], Point angles)
+void servoMoveAngle(PWMServo *(&servos)[3], Point angles, bool left = false, bool transform_angles = true)
 {
+    if (transform_angles)
+    {
+        // invert angles according to defines
+        angles.a1 *= SERVO_INV_ANG_1;
+        angles.a2 *= SERVO_INV_ANG_2;
+        angles.a3 *= SERVO_INV_ANG_3;
+
+        if (left) // if leg is on the left side of robot
+        {
+            angles.a1 *= -1;
+        }
+        // offset angles according to defines
+        angles.a1 += SERVO_ANGLE_1;
+        angles.a2 += SERVO_ANGLE_2;
+        angles.a3 += SERVO_ANGLE_3;
+    }
+
+    // write angles to servos
     servos[0]->write(servoLimitAngle(angles.a1));
     servos[1]->write(servoLimitAngle(angles.a2));
     servos[2]->write(servoLimitAngle(angles.a3));
