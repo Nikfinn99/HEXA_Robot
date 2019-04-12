@@ -3,7 +3,6 @@
 #include <PWMServo.h>
 #include <Point.h>
 #include <FilterLinear.h>
-#include "define.h"
 #include "servo_functions.h"
 
 class Leg
@@ -92,6 +91,21 @@ public:
     setTargets();
   }
 
+  /**
+   * Move leg by angle instead of point
+   * 
+   * @param p_angles target angles of servos
+   * @param p_transform_angles if absolute angle should be transmitted to servo or computed angle
+  */
+  void moveAngle(Point &p_angles, bool p_transform_angles)
+  {
+    // disable movement by point as leg was moved by angle
+    valid_point = false;
+
+    // fast movement by angle
+    servoMoveAngle(servos, p_angles, is_left, p_transform_angles);
+  }
+
   // raise all legs from ground to turn off savely
   void curlUp()
   {
@@ -99,10 +113,7 @@ public:
     valid_point = false;
 
     // set fixed angles to raise leg from ground
-    Point angles;
-    angles.a1 = 0 * SERVO_INV_ANG_1 + SERVO_ANGLE_1;
-    angles.a2 = 90 * SERVO_INV_ANG_2 + SERVO_ANGLE_2;
-    angles.a3 = 120 * SERVO_INV_ANG_3 + SERVO_ANGLE_3;
+    Point angles(0, 90, 120);
 
     // apply fast movement
     servoMoveAngle(servos, angles, is_left);
