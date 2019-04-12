@@ -47,10 +47,19 @@ public:
   }
 
   /**
+   * default position for leg
+  */
+  void setInitialPose()
+  {
+    Point p(150, 0, 50);
+    setInitialPose(p);
+  }
+
+  /**
    * set starting position of leg
    * initialize filter with starting position
   */
-  void setInitialPose(Point p)
+  void setInitialPose(Point &p)
   {
     last_position = p;
 

@@ -26,7 +26,12 @@ void setup()
   pinMode(13, OUTPUT);
   digitalWrite(13, HIGH);
 
-  leg_br.setInitialPose(Point(150, 0, 50));
+  leg_fr.setInitialPose();
+  leg_r.setInitialPose();
+  leg_br.setInitialPose();
+  leg_fl.setInitialPose();
+  leg_l.setInitialPose();
+  leg_bl.setInitialPose();
 
   Serial << "---SETUP-END---" << endl;
 }
