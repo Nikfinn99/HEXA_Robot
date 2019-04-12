@@ -3,25 +3,14 @@
 #include <SerialStream.h>
 #include <FilterLinear.h>
 #include "point.h"
-#include "define.h"
-#include "leg.h"
-
-#define TRANSITION 300
+#include "leg_objects.h"
 
 int x = 100;
 bool dir = true;
 int xmin = 0;
 int xmax = 180;
 int sx = 180, sy = 0, sz = -50;
-int speed = TRANSITION;
-
-Leg leg_fr(servos_fr, LEG_OFFS, LEG_LEN_1, LEG_LEN_2);
-Leg leg_r(servos_r, LEG_OFFS, LEG_LEN_1, LEG_LEN_2);
-Leg leg_br(servos_br, LEG_OFFS, LEG_LEN_1, LEG_LEN_2);
-
-Leg leg_fl(servos_fl, LEG_OFFS, LEG_LEN_1, LEG_LEN_2, true);
-Leg leg_l(servos_l, LEG_OFFS, LEG_LEN_1, LEG_LEN_2, true);
-Leg leg_bl(servos_bl, LEG_OFFS, LEG_LEN_1, LEG_LEN_2, true);
+int speed = 300;
 
 void setup()
 {
@@ -44,7 +33,13 @@ void setup()
 
 void loop()
 {
+  // update all legs for interpolation
+  leg_fr.update();
+  leg_r.update();
   leg_br.update();
+  leg_fl.update();
+  leg_l.update();
+  leg_bl.update();
 
   // parse incoming serial data
   while (Serial.available())
@@ -72,7 +67,12 @@ void loop()
   leg_br.moveAbsolutePoint(p);
 
   // Point p(90, 90, 0);
-  // servoMoveAngle(servos_br, p, false, false);
+  // leg_fr.moveAngle(p, false);
+  // leg_r.moveAngle(p, false);
+  // leg_br.moveAngle(p, false);
+  // leg_fl.moveAngle(p, false);
+  // leg_l.moveAngle(p, false);
+  // leg_bl.moveAngle(p, false);
 
   delay(10);
 }
