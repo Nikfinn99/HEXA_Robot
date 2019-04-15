@@ -72,11 +72,17 @@ public:
    * move leg to absolute point
    * set valid_point to enable movement
    * 
-   * @param Point to move leg to
+   * @param p Point to move leg to
+   * @param speed (optional) time to reach target
   */
-  void moveAbsolutePoint(Point &p)
+  void moveAbsolutePoint(Point &p, float speed = 0.0f)
   {
     valid_point = true;
+
+    if (speed > 0)
+    {
+      setSpeed(speed);
+    }
 
     // copy parameter to internal variable to enable relative movement
     last_position = p;
@@ -88,10 +94,15 @@ public:
   /**
    * move leg relative to last movement
    * 
-   * @param relative offset in xyz direction
+   * @param p relative offset in xyz direction
+   * @param speed (optional) time to reach target
   */
-  void moveRelativePoint(Point &p)
+  void moveRelativePoint(Point &p, float speed = 0.0f)
   {
+    if (speed > 0)
+    {
+      setSpeed(speed);
+    }
     // add paramater to old position to create new position
     // uses overridden operator operations
     last_position += p;
