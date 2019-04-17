@@ -68,7 +68,7 @@ public:
   */
   void setInitialPose()
   {
-    Point p(150, 0, 50);
+    Point p(100, 0, 30);
     setInitialPose(p);
   }
 
@@ -79,6 +79,7 @@ public:
   void setInitialPose(Point &p)
   {
     m_last_position = p;
+    m_valid_point = true;
 
     m_filter_x.setStartValue(p.x);
     m_filter_y.setStartValue(p.y);
@@ -116,6 +117,9 @@ public:
     }
 
     m_last_position.x = p_x;
+
+    // apply last_position to leg movement
+    setTargets();
   }
 
   void moveAbsoluteY(float p_y, float p_speed = 0.0f)
@@ -126,6 +130,9 @@ public:
     }
 
     m_last_position.y = p_y;
+
+    // apply last_position to leg movement
+    setTargets();
   }
 
   void moveAbsoluteZ(float p_z, float p_speed = 0.0f)
@@ -136,6 +143,9 @@ public:
     }
 
     m_last_position.z = p_z;
+
+    // apply last_position to leg movement
+    setTargets();
   }
 
   /**
@@ -204,7 +214,7 @@ public:
 
       Point angles = servoComputeAllAngles(p, m_offset, m_length1, m_length2);
 
-      moveAngle(angles);
+      servoMoveAngle(m_servos, angles, m_is_left);
     }
   }
 };
