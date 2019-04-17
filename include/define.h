@@ -6,9 +6,9 @@
 #define SERVO_ANGLE_3 155
 
 // define leg lengths
-#define LEG_OFFS 50
-#define LEG_LEN_1 109
-#define LEG_LEN_2 115
+#define LEG_OFFS 30
+#define LEG_LEN_1 50
+#define LEG_LEN_2 57
 
 // define if servo angle should be inverted
 #define SERVO_INV_ANG_1 -1
