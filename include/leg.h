@@ -8,12 +8,12 @@
 class Leg
 {
 private:
-  PWMServo *(&servos)[3];
-  float offset, length1, length2;
-  Point last_position;
-  bool valid_point = false;
-  FilterLinear filter_x, filter_y, filter_z;
-  bool is_left;
+  PWMServo *(&m_servos)[3];
+  float m_offset, m_length1, m_length2;
+  Point m_last_position;
+  bool m_valid_point = false;
+  FilterLinear m_filter_x, m_filter_y, m_filter_z;
+  bool m_is_left;
 
   /**
    * set target of filters according to last_position
@@ -21,29 +21,41 @@ private:
   */
   void setTargets()
   {
-    if (valid_point)
+    if (m_valid_point)
     {
-      filter_x.setTarget(last_position.x);
-      filter_y.setTarget(last_position.y);
-      filter_z.setTarget(last_position.z);
+      m_filter_x.setTarget(m_last_position.x);
+      m_filter_y.setTarget(m_last_position.y);
+      m_filter_z.setTarget(m_last_position.z);
     }
   }
 
 public:
   Leg(PWMServo *(&servos)[3], float offset, float length1, float length2, bool left = false)
-      : servos(servos), offset(offset), length1(length1), length2(length2), is_left(left) {}
+      : m_servos(servos), m_offset(offset), m_length1(length1), m_length2(length2), m_is_left(left) {}
 
   ~Leg() {}
+
+  /**
+   * returns the current point of leg
+  */
+  Point getCurrentPoint()
+  {
+    Point p;
+    p.x = m_filter_x.getValue();
+    p.y = m_filter_y.getValue();
+    p.z = m_filter_z.getValue();
+    return p;
+  }
 
   /**
    * set time parameter of internal filters
    * zero means instant movement
   */
-  void setSpeed(float speed)
+  void setSpeed(float p_speed)
   {
-    filter_x.setTimeParameter(speed);
-    filter_y.setTimeParameter(speed);
-    filter_z.setTimeParameter(speed);
+    m_filter_x.setTimeParameter(p_speed);
+    m_filter_y.setTimeParameter(p_speed);
+    m_filter_z.setTimeParameter(p_speed);
   }
 
   /**
@@ -61,11 +73,11 @@ public:
   */
   void setInitialPose(Point &p)
   {
-    last_position = p;
+    m_last_position = p;
 
-    filter_x.setStartValue(p.x);
-    filter_y.setStartValue(p.y);
-    filter_z.setStartValue(p.z);
+    m_filter_x.setStartValue(p.x);
+    m_filter_y.setStartValue(p.y);
+    m_filter_z.setStartValue(p.z);
   }
 
   /**
@@ -75,17 +87,17 @@ public:
    * @param p Point to move leg to
    * @param speed (optional) time to reach target
   */
-  void moveAbsolutePoint(Point &p, float speed = 0.0f)
+  void moveAbsolutePoint(Point &p, float p_speed = 0.0f)
   {
-    valid_point = true;
+    m_valid_point = true;
 
-    if (speed > 0)
+    if (p_speed > 0)
     {
-      setSpeed(speed);
+      setSpeed(p_speed);
     }
 
     // copy parameter to internal variable to enable relative movement
-    last_position = p;
+    m_last_position = p;
 
     // apply last_position to leg movement
     setTargets();
@@ -97,15 +109,15 @@ public:
    * @param p relative offset in xyz direction
    * @param speed (optional) time to reach target
   */
-  void moveRelativePoint(Point &p, float speed = 0.0f)
+  void moveRelativePoint(Point &p, float p_speed = 0.0f)
   {
-    if (speed > 0)
+    if (p_speed > 0)
     {
-      setSpeed(speed);
+      setSpeed(p_speed);
     }
     // add paramater to old position to create new position
     // uses overridden operator operations
-    last_position += p;
+    m_last_position += p;
 
     // apply last_position to leg movement
     setTargets();
@@ -117,26 +129,23 @@ public:
    * @param p_angles target angles of servos
    * @param p_transform_angles if absolute angle should be transmitted to servo or computed angle
   */
-  void moveAngle(Point &p_angles, bool p_transform_angles)
+  void moveAngle(Point &p_angles, bool p_transform_angles = true)
   {
     // disable movement by point as leg was moved by angle
-    valid_point = false;
+    m_valid_point = false;
 
     // fast movement by angle
-    servoMoveAngle(servos, p_angles, is_left, p_transform_angles);
+    servoMoveAngle(m_servos, p_angles, m_is_left, p_transform_angles);
   }
 
   // raise all legs from ground to turn off savely
   void curlUp()
   {
-    // disable point movemement as this curl up move is by angles
-    valid_point = false;
-
     // set fixed angles to raise leg from ground
     Point angles(0, 90, 120);
 
     // apply fast movement
-    servoMoveAngle(servos, angles, is_left);
+    moveAngle(angles);
   }
 
   /**
@@ -146,21 +155,21 @@ public:
   void update()
   {
     // update filters
-    filter_x.update();
-    filter_y.update();
-    filter_z.update();
+    m_filter_x.update();
+    m_filter_y.update();
+    m_filter_z.update();
 
-    if (valid_point)
+    if (m_valid_point)
     {
       Point p;
       // get interpolated filter data
-      p.x = filter_x.getValue();
-      p.y = filter_y.getValue();
-      p.z = filter_z.getValue();
+      p.x = m_filter_x.getValue();
+      p.y = m_filter_y.getValue();
+      p.z = m_filter_z.getValue();
 
-      Point angles = servoComputeAllAngles(p, offset, length1, length2);
+      Point angles = servoComputeAllAngles(p, m_offset, m_length1, m_length2);
 
-      servoMoveAngle(servos, angles, is_left);
+      moveAngle(angles);
     }
   }
 };
