@@ -58,6 +58,11 @@ public:
     m_filter_z.setTimeParameter(p_speed);
   }
 
+  float getSpeed()
+  {
+    return m_filter_x.getTimeParameter();
+  }
+
   /**
    * default position for leg
   */
@@ -101,6 +106,36 @@ public:
 
     // apply last_position to leg movement
     setTargets();
+  }
+
+  void moveAbsoluteX(float p_x, float p_speed = 0.0f)
+  {
+    if (p_speed > 0)
+    {
+      setSpeed(p_speed);
+    }
+
+    m_last_position.x = p_x;
+  }
+
+  void moveAbsoluteY(float p_y, float p_speed = 0.0f)
+  {
+    if (p_speed > 0)
+    {
+      setSpeed(p_speed);
+    }
+
+    m_last_position.y = p_y;
+  }
+
+  void moveAbsoluteZ(float p_z, float p_speed = 0.0f)
+  {
+    if (p_speed > 0)
+    {
+      setSpeed(p_speed);
+    }
+
+    m_last_position.z = p_z;
   }
 
   /**
