@@ -79,7 +79,11 @@ void servosReset(PWMServo *(&servos)[size])
 */
 float servoComputeRotatedLength(const Point &p)
 {
+#ifdef LEG_COMPENSATE_LENGTH
     return sqrt(sq(p.x) + sq(p.y));
+#else
+    return p.x;
+#endif
 }
 
 /**
