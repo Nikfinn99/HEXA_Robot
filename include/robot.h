@@ -1,12 +1,14 @@
 #pragma once
 
 #include "leg.h"
+#include <SerialStream.h>
 
-#define SLOW_MOVEMENT 300
-#define FAST_MOVEMENT 100
+#define SLOW_MOVEMENT 150
+#define FAST_MOVEMENT 50
 
 enum class WalkMode
 {
+  NONE,
   RESET,
   NORMAL
 };
@@ -27,18 +29,14 @@ private:
   float m_ground_location = -50;
   float m_walk_height = 20;
 
-  void initStep(bool *step_running, unsigned long *step_start)
+  void updateStep(unsigned long *step_start, bool *step_running, uint8_t *step, uint16_t p_time)
   {
     if (!(*step_running))
     {
       (*step_running) = true;
       (*step_start) = millis();
     }
-  }
-
-  void updateStep(unsigned long p_step_start, bool *step_running, uint8_t *step, uint16_t p_time)
-  {
-    if (millis() > p_step_start + p_time)
+    if (millis() > (*step_start) + p_time)
     {
       (*step_running) = false;
       (*step)++;
@@ -68,6 +66,71 @@ public:
     {
       step = 0;
     }
+
+    switch (step)
+    {
+    case 0: // move all legs to ground
+
+      if (!step_running)
+      {
+        Serial << "running" << step_running << " step" << step << endl;
+        for (uint8_t i = 0; i < 6; i += 2)
+        {
+          m_all_legs[i]->moveAbsoluteZ(m_ground_location + m_walk_height, FAST_MOVEMENT);
+        }
+      }
+
+      updateStep(&step_start, &step_running, &step, FAST_MOVEMENT);
+      break;
+
+    // EVERY SECOND LEG
+    case 1: // move every second leg up
+
+      if (!step_running)
+      {
+        Serial << "running" << step_running << " step" << step << endl;
+        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        {
+          m_all_legs[i]->moveAbsoluteY(50, SLOW_MOVEMENT);
+        }
+      }
+
+      updateStep(&step_start, &step_running, &step, SLOW_MOVEMENT);
+      break;
+
+    case 2: // reset x and y of every second leg
+
+      if (!step_running)
+      {
+        Serial << "running" << step_running << " step" << step << endl;
+        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        {
+          m_all_legs[i]->moveAbsoluteZ(m_ground_location, SLOW_MOVEMENT);
+        }
+      }
+
+      updateStep(&step_start, &step_running, &step, SLOW_MOVEMENT);
+      break;
+
+    case 3: // move every second leg down
+
+      if (!step_running)
+      {
+        Serial << "running" << step_running << " step" << step << endl;
+        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        {
+          m_all_legs[i]->moveAbsoluteY(-50, SLOW_MOVEMENT);
+        }
+      }
+
+      updateStep(&step_start, &step_running, &step, SLOW_MOVEMENT);
+      break;
+    }
+
+    if (step > 3)
+    {
+      step = 0;
+    }
   }
 
   void resetLegs(bool restart = false)
@@ -84,86 +147,113 @@ public:
     switch (step)
     {
     case 0: // move all legs to ground
-      initStep(&step_running, &step_start);
 
-      for (uint8_t i = 0; i < 6; i++)
+      if (!step_running)
       {
-        m_all_legs[i]->moveAbsoluteZ(m_ground_location, FAST_MOVEMENT);
+        Serial << "running" << step_running << " step" << step << endl;
+        for (uint8_t i = 0; i < 6; i++)
+        {
+          m_all_legs[i]->moveAbsoluteZ(m_ground_location, FAST_MOVEMENT);
+        }
       }
 
-      updateStep(step_start, &step_running, &step, FAST_MOVEMENT);
+      updateStep(&step_start, &step_running, &step, FAST_MOVEMENT);
       break;
 
     // EVERY SECOND LEG
     case 1: // move every second leg up
-      initStep(&step_running, &step_start);
 
-      for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+      if (!step_running)
       {
-        m_all_legs[i]->moveAbsoluteZ(m_ground_location + m_walk_height, FAST_MOVEMENT);
+        Serial << "running" << step_running << " step" << step << endl;
+        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        {
+          m_all_legs[i]->moveAbsoluteZ(m_ground_location + m_walk_height, FAST_MOVEMENT);
+        }
       }
 
-      updateStep(step_start, &step_running, &step, FAST_MOVEMENT);
+      updateStep(&step_start, &step_running, &step, FAST_MOVEMENT);
       break;
 
     case 2: // reset x and y of every second leg
-      initStep(&step_running, &step_start);
 
-      for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+      if (!step_running)
       {
-        m_all_legs[i]->moveAbsoluteX(180, SLOW_MOVEMENT);
-        m_all_legs[i]->moveAbsoluteY(0, SLOW_MOVEMENT);
+        Serial << "running" << step_running << " step" << step << endl;
+        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        {
+          m_all_legs[i]->moveAbsoluteX(100, SLOW_MOVEMENT);
+          m_all_legs[i]->moveAbsoluteY(0, SLOW_MOVEMENT);
+        }
       }
 
-      updateStep(step_start, &step_running, &step, SLOW_MOVEMENT);
+      updateStep(&step_start, &step_running, &step, SLOW_MOVEMENT);
       break;
 
     case 3: // move every second leg down
-      initStep(&step_running, &step_start);
 
-      for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+      if (!step_running)
       {
-        m_all_legs[i]->moveAbsoluteZ(m_ground_location, FAST_MOVEMENT);
+        Serial << "running" << step_running << " step" << step << endl;
+        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        {
+          m_all_legs[i]->moveAbsoluteZ(m_ground_location, FAST_MOVEMENT);
+        }
       }
 
-      updateStep(step_start, &step_running, &step, FAST_MOVEMENT);
+      updateStep(&step_start, &step_running, &step, FAST_MOVEMENT);
       break;
 
     // EVERY OTHER SECOND LEG
     case 4: // move every other second leg up
-      initStep(&step_running, &step_start);
 
-      for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+      if (!step_running)
       {
-        m_all_legs[i + 1]->moveAbsoluteZ(m_ground_location + m_walk_height, FAST_MOVEMENT);
+        Serial << "running" << step_running << " step" << step << endl;
+        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        {
+          m_all_legs[i + 1]->moveAbsoluteZ(m_ground_location + m_walk_height, FAST_MOVEMENT);
+        }
       }
 
-      updateStep(step_start, &step_running, &step, FAST_MOVEMENT);
+      updateStep(&step_start, &step_running, &step, FAST_MOVEMENT);
       break;
 
     case 5: // reset x and y of every other second leg
-      initStep(&step_running, &step_start);
 
-      for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+      if (!step_running)
       {
-        m_all_legs[i + 1]->moveAbsoluteX(180, SLOW_MOVEMENT);
-        m_all_legs[i + 1]->moveAbsoluteY(0, SLOW_MOVEMENT);
+        Serial << "running" << step_running << " step" << step << endl;
+        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        {
+          m_all_legs[i + 1]->moveAbsoluteX(100, SLOW_MOVEMENT);
+          m_all_legs[i + 1]->moveAbsoluteY(0, SLOW_MOVEMENT);
+        }
       }
 
-      updateStep(step_start, &step_running, &step, SLOW_MOVEMENT);
+      updateStep(&step_start, &step_running, &step, SLOW_MOVEMENT);
       break;
 
     case 6: // move every other second leg down
-      initStep(&step_running, &step_start);
 
-      for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+      if (!step_running)
       {
-        m_all_legs[i + 1]->moveAbsoluteZ(m_ground_location, FAST_MOVEMENT);
+        Serial << "running" << step_running << " step" << step << endl;
+        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        {
+          m_all_legs[i + 1]->moveAbsoluteZ(m_ground_location, FAST_MOVEMENT);
+        }
       }
 
-      updateStep(step_start, &step_running, &step, FAST_MOVEMENT);
+      updateStep(&step_start, &step_running, &step, FAST_MOVEMENT);
       break;
     }
+  }
+
+  void
+  setMode(WalkMode mode)
+  {
+    m_walk_mode = mode;
   }
 
   void update()
@@ -186,5 +276,7 @@ public:
       walkNormal(restart);
       break;
     }
+
+    m_last_walk_mode = m_walk_mode;
   }
 };
