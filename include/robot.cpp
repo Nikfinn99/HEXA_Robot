@@ -32,68 +32,68 @@ void Robot::walkNormal(bool restart = false)
 
     switch (step)
     {
-    case 0: // move every OTHER second leg DOWN
+    case 0: /* OTHER legs DOWN */
 
-        step_speed = m_speed_fast; // FAST
+        step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        for (uint8_t i = 0; i < 6; i += 2)
         {
             m_all_legs[i + 1]->moveAbsoluteZ(m_ground_location, step_speed);
         }
         break;
 
-    case 1: // move every second leg UP
+    case 1: /* legs UP */
 
-        step_speed = m_speed_fast; // FAST
+        step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        for (uint8_t i = 0; i < 6; i += 2)
         {
             m_all_legs[i]->moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
         }
         break;
 
-    case 2: // legs FORWARD - OTHERS BACKWARD
+    case 2: /* legs FORWARD - OTHERS BACKWARD */
 
-        step_speed = m_speed_slow; // SLOW
+        step_speed = m_speed_slow; /* SLOW */
 
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        for (uint8_t i = 0; i < 6; i += 2)
         {
             m_all_legs[i]->moveAbsoluteY(50, step_speed);
             m_all_legs[i + 1]->moveAbsoluteY(-50, step_speed);
         }
         break;
 
-    case 3: // legs DOWN
+    case 3: /* legs DOWN */
 
-        step_speed = m_speed_fast; // FAST
+        step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        for (uint8_t i = 0; i < 6; i += 2)
         {
             m_all_legs[i]->moveAbsoluteZ(m_ground_location, step_speed);
         }
         break;
 
-    case 4: // OTHER legs UP
+    case 4: /* OTHER legs UP */
 
-        step_speed = m_speed_fast; // FAST
+        step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        for (uint8_t i = 0; i < 6; i += 2)
         {
             m_all_legs[i + 1]->moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
         }
         break;
 
-    case 5: // legs BACKWARD - OTHER FORWARD
+    case 5: /* legs BACKWARD - OTHER FORWARD */
 
-        step_speed = m_speed_slow; // SLOW
+        step_speed = m_speed_slow; /* SLOW */
 
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        for (uint8_t i = 0; i < 6; i += 2)
         {
             m_all_legs[i]->moveAbsoluteY(-50, step_speed);
             m_all_legs[i + 1]->moveAbsoluteY(50, step_speed);
         }
         break;
-    } // end switch step
+    } /* end switch step */
 
     updateStep(&step_start, &step_running, &step, step_speed, 5, true);
 }
@@ -112,81 +112,82 @@ void Robot::resetLegs(bool restart = false)
 
     switch (step)
     {
-    case 0: // move all legs to ground
+    case 0: /* ALL legs DOWN */
 
-        step_speed = m_speed_fast; // FAST
+        step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 0; i < 6; i++)
+        for (uint8_t i = 0; i < 6; i += 2)
         {
             m_all_legs[i]->moveAbsoluteZ(m_ground_location, step_speed);
+            m_all_legs[i + 1]->moveAbsoluteZ(m_ground_location, step_speed);
         }
         break;
 
     // EVERY SECOND LEG
-    case 1: // move every second leg up
+    case 1: /* legs UP */
 
-        step_speed = m_speed_fast; // FAST
+        step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        for (uint8_t i = 0; i < 6; i += 2)
         {
             m_all_legs[i]->moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
         }
         break;
 
-    case 2: // reset x and y of every second leg
+    case 2: /* RESET XY of legs */
 
-        step_speed = m_speed_slow; // SLOW
+        step_speed = m_speed_slow; /* SLOW */
 
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        for (uint8_t i = 0; i < 6; i += 2)
         {
             m_all_legs[i]->moveAbsoluteX(100, step_speed);
             m_all_legs[i]->moveAbsoluteY(0, step_speed);
         }
         break;
 
-    case 3: // move every second leg down
+    case 3: /* legs DOWN */
 
-        step_speed = m_speed_fast; // FAST
+        step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
+        for (uint8_t i = 0; i < 6; i += 2)
         {
             m_all_legs[i]->moveAbsoluteZ(m_ground_location, step_speed);
         }
         break;
 
-    // REMAINING LEGS
-    case 4: // move every other second leg up
+    /* REMAINING LEGS */
+    case 4: /* OTHER legs UP */
 
-        step_speed = m_speed_fast; // FAST
+        step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 0; i < 6; i += 2) // start at 1 - increment by 2
+        for (uint8_t i = 0; i < 6; i += 2)
         {
             m_all_legs[i + 1]->moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
         }
         break;
 
-    case 5: // reset x and y of every other second leg
+    case 5: /* RESET XY of OTHER legs */
 
-        step_speed = m_speed_slow; // SLOW
+        step_speed = m_speed_slow; /* SLOW */
 
-        for (uint8_t i = 1; i < 6; i += 2) // start at 1 - increment by 2
+        for (uint8_t i = 0; i < 6; i += 2)
         {
-            m_all_legs[i]->moveAbsoluteX(100, step_speed);
-            m_all_legs[i]->moveAbsoluteY(0, step_speed);
+            m_all_legs[i + 1]->moveAbsoluteX(100, step_speed);
+            m_all_legs[i + 1]->moveAbsoluteY(0, step_speed);
         }
         break;
 
-    case 6: // move every other second leg down
+    case 6: /* OTHER legs DOWN */
 
-        step_speed = m_speed_fast; // FAST
+        step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 1; i < 6; i += 2) // start at 1 - increment by 2
+        for (uint8_t i = 0; i < 6; i += 2)
         {
-            m_all_legs[i]->moveAbsoluteZ(m_ground_location, step_speed);
+            m_all_legs[i + 1]->moveAbsoluteZ(m_ground_location, step_speed);
         }
         break;
 
-    } // end switch step
+    } /* end switch step */
 
     updateStep(&step_start, &step_running, &step, step_speed);
 }

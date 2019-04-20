@@ -1,25 +1,25 @@
 #pragma once
 
-// define reset positions for servos
+/* define reset positions for servos */
 #define SERVO_ANGLE_1 90
 #define SERVO_ANGLE_2 90
 #define SERVO_ANGLE_3 155
 
-// define leg lengths
+/* define leg lengths */
 #define LEG_OFFS 30
 #define LEG_LEN_1 50
 #define LEG_LEN_2 57
 
-// if calculations should include longer leg if y != 0
-// uncomment to disable calculation
+/* if calculations should include longer leg if y != 0 */
+/* uncomment to disable calculation */
 #define LEG_COMPENSATE_LENGTH
 
-// define if servo angle should be inverted
+/* define if servo angle should be inverted */
 #define SERVO_INV_ANG_1 -1
 #define SERVO_INV_ANG_2 1
 #define SERVO_INV_ANG_3 -1
 
-// define pins for servos
+/* define pins for servos */
 #define SERVO_FR_1 1
 #define SERVO_FR_2 2
 #define SERVO_FR_3 3

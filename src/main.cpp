@@ -22,10 +22,11 @@ void setup()
 
   Serial << "---SETUP-START---" << endl;
 
-  // setup Servos
+  /* setup Servos */
   servosAttach();
-  servosReset<18>(servos_all);
+  // servosReset<18>(servos_all);
 
+  /* turn on builtin led */
   pinMode(13, OUTPUT);
   digitalWrite(13, HIGH);
 
@@ -45,28 +46,28 @@ void loop()
 {
   robot.update();
 
-  // parse incoming serial data
+  /* parse incoming serial data */
   while (Serial.available())
   {
     char c = Serial.read();
     switch (c)
     {
-    case 'x': // x coordinate
+    case 'x': /* x coordinate */
       sx = Serial.parseInt();
       break;
-    case 'y': // y coordinate
+    case 'y': /* y coordinate */
       sy = Serial.parseInt();
       break;
-    case 'z': // z coordinate
+    case 'z': /* z coordinate */
       sz = Serial.parseInt();
       break;
-    case 's': // leg movement speed
+    case 's': /* leg movement speed */
       speed = Serial.parseInt();
       break;
-    case 'r':
+    case 'r': /* reset all legs */
       robot.setMode(WalkMode::RESET);
       break;
-    case 'w':
+    case 'w': /* enable walking */
       robot.setMode(WalkMode::NORMAL);
       break;
     }
