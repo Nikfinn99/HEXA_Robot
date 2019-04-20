@@ -36,8 +36,7 @@ void setup()
   leg_l.setInitialPose();
   leg_bl.setInitialPose();
 
-  robot.setWalkParameters(-50, 50);
-  robot.setSpeed(speed, speed / 2);
+  robot.setGroundLocation(-50).setWalkHeight(20).setSpeed(speed, speed / 2);
 
   Serial << "---SETUP-END---" << endl;
 }
