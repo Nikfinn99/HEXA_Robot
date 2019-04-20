@@ -7,7 +7,8 @@ enum class WalkMode
 {
   NONE,
   RESET,
-  NORMAL
+  NORMAL,
+  SMOOTH
 };
 
 class Robot
@@ -29,236 +30,91 @@ private:
   float m_speed_slow = 200;
   float m_speed_fast = 100;
 
-  void updateStep(unsigned long *step_start, bool *step_running, uint8_t *step, uint16_t p_time)
+  /**
+   * keeps track of step, if current step should be updated depending on time, max steps and if steps are looped
+  */
+  void updateStep(unsigned long *step_start, bool *step_running, uint8_t *step, uint16_t p_time, uint8_t p_max_step = 250, bool p_loop = false)
   {
-    if (!(*step_running))
+    if (*step > p_max_step)
     {
-      (*step_running) = true;
+      if (p_loop)
+      {
+        (*step) = 0; // reset to start step
+      }
+      else
+      {
+        return; // abort
+      }
+    }
+
+    if (!(*step_running)) // not running
+    {
+      (*step_running) = true; // init running
       (*step_start) = millis();
     }
-    if (millis() > (*step_start) + p_time)
+    if (millis() > (*step_start) + p_time) // finished
     {
       (*step_running) = false;
-      (*step)++;
+      (*step)++; // next step
     }
   }
 
 public:
-  Robot(Leg &leg_fr, Leg &leg_r, Leg &leg_br, Leg &leg_fl, Leg &leg_l, Leg &leg_bl)
-      : m_leg_fr(leg_fr), m_leg_r(leg_r), m_leg_br(leg_br), m_leg_fl(leg_fl), m_leg_l(leg_l), m_leg_bl(leg_bl),
-        m_all_legs{&leg_fr, &leg_r, &leg_br, &leg_fl, &leg_l, &leg_bl} {}
+  Robot(Leg &leg_fr, Leg &leg_r, Leg &leg_br, Leg &leg_fl, Leg &leg_l, Leg &leg_bl)                             // references to legs as parameters
+      : m_leg_fr(leg_fr), m_leg_r(leg_r), m_leg_br(leg_br), m_leg_fl(leg_fl), m_leg_l(leg_l), m_leg_bl(leg_bl), // attach legs
+        m_all_legs{&leg_fr, &leg_r, &leg_br, &leg_fl, &leg_l, &leg_bl}                                          // add legs to array
+  {
+  }
 
   ~Robot() {}
 
-  void setWalkParameters(float ground_location, float walk_height)
+  // SETTERS and GETTERS
+
+  Robot &setGroundLocation(float ground_location)
   {
     m_ground_location = ground_location;
-    m_walk_height = walk_height;
+    return *this;
   }
 
-  void setSpeed(float slow, float fast)
+  float getGroundLocation()
+  {
+    return m_ground_location;
+  }
+
+  Robot &setWalkHeight(float walk_height)
+  {
+    m_walk_height = walk_height;
+    return *this;
+  }
+
+  float getWalkHeight()
+  {
+    return m_walk_height;
+  }
+
+  Robot &setSpeed(float slow, float fast)
   {
     m_speed_fast = fast;
     m_speed_slow = slow;
+    return *this;
   }
 
-  void walkNormal(bool restart = false)
-  {
-    static uint8_t step = 0;
-    static unsigned long step_start;
-    static bool step_running = false;
-
-    if (restart)
-    {
-      step = 0;
-    }
-
-    switch (step)
-    {
-    case 0: // move all legs to ground
-
-      if (!step_running)
-      {
-        for (uint8_t i = 0; i < 6; i += 2)
-        {
-          m_all_legs[i]->moveAbsoluteZ(m_ground_location + m_walk_height, m_speed_fast);
-        }
-      }
-
-      updateStep(&step_start, &step_running, &step, m_speed_fast);
-      break;
-
-    // EVERY SECOND LEG
-    case 1: // move every second leg up
-
-      if (!step_running)
-      {
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
-        {
-          m_all_legs[i]->moveAbsoluteY(50, m_speed_slow);
-        }
-      }
-
-      updateStep(&step_start, &step_running, &step, m_speed_slow);
-      break;
-
-    case 2: // reset x and y of every second leg
-
-      if (!step_running)
-      {
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
-        {
-          m_all_legs[i]->moveAbsoluteZ(m_ground_location, m_speed_fast);
-        }
-      }
-
-      updateStep(&step_start, &step_running, &step, m_speed_fast);
-      break;
-
-    case 3: // move every second leg down
-
-      if (!step_running)
-      {
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
-        {
-          m_all_legs[i]->moveAbsoluteY(-50, m_speed_slow);
-        }
-      }
-
-      updateStep(&step_start, &step_running, &step, m_speed_slow);
-      break;
-    }
-
-    if (step > 3)
-    {
-      step = 0;
-    }
-  }
-
-  void resetLegs(bool restart = false)
-  {
-    static uint8_t step = 0;
-    static unsigned long step_start;
-    static bool step_running = false;
-
-    if (restart)
-    {
-      step = 0;
-    }
-
-    switch (step)
-    {
-    case 0: // move all legs to ground
-
-      if (!step_running)
-      {
-        Serial << "running" << step_running << " step" << step << endl;
-        for (uint8_t i = 0; i < 6; i++)
-        {
-          m_all_legs[i]->moveAbsoluteZ(m_ground_location, m_speed_fast);
-        }
-      }
-
-      updateStep(&step_start, &step_running, &step, m_speed_fast);
-      break;
-
-    // EVERY SECOND LEG
-    case 1: // move every second leg up
-
-      if (!step_running)
-      {
-        Serial << "running" << step_running << " step" << step << endl;
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
-        {
-          m_all_legs[i]->moveAbsoluteZ(m_ground_location + m_walk_height, m_speed_fast);
-        }
-      }
-
-      updateStep(&step_start, &step_running, &step, m_speed_fast);
-      break;
-
-    case 2: // reset x and y of every second leg
-
-      if (!step_running)
-      {
-        Serial << "running" << step_running << " step" << step << endl;
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
-        {
-          m_all_legs[i]->moveAbsoluteX(100, m_speed_slow);
-          m_all_legs[i]->moveAbsoluteY(0, m_speed_slow);
-        }
-      }
-
-      updateStep(&step_start, &step_running, &step, m_speed_slow);
-      break;
-
-    case 3: // move every second leg down
-
-      if (!step_running)
-      {
-        Serial << "running" << step_running << " step" << step << endl;
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
-        {
-          m_all_legs[i]->moveAbsoluteZ(m_ground_location, m_speed_fast);
-        }
-      }
-
-      updateStep(&step_start, &step_running, &step, m_speed_fast);
-      break;
-
-    // EVERY OTHER SECOND LEG
-    case 4: // move every other second leg up
-
-      if (!step_running)
-      {
-        Serial << "running" << step_running << " step" << step << endl;
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
-        {
-          m_all_legs[i + 1]->moveAbsoluteZ(m_ground_location + m_walk_height, m_speed_fast);
-        }
-      }
-
-      updateStep(&step_start, &step_running, &step, m_speed_fast);
-      break;
-
-    case 5: // reset x and y of every other second leg
-
-      if (!step_running)
-      {
-        Serial << "running" << step_running << " step" << step << endl;
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
-        {
-          m_all_legs[i + 1]->moveAbsoluteX(100, m_speed_slow);
-          m_all_legs[i + 1]->moveAbsoluteY(0, m_speed_slow);
-        }
-      }
-
-      updateStep(&step_start, &step_running, &step, m_speed_slow);
-      break;
-
-    case 6: // move every other second leg down
-
-      if (!step_running)
-      {
-        Serial << "running" << step_running << " step" << step << endl;
-        for (uint8_t i = 0; i < 6; i += 2) // increment by 2
-        {
-          m_all_legs[i + 1]->moveAbsoluteZ(m_ground_location, m_speed_fast);
-        }
-      }
-
-      updateStep(&step_start, &step_running, &step, m_speed_fast);
-      break;
-    }
-  }
-
-  void
-  setMode(WalkMode mode)
+  Robot &setMode(WalkMode mode)
   {
     m_walk_mode = mode;
+    return *this;
   }
 
-  void update()
+  WalkMode getMode()
+  {
+    return m_walk_mode;
+  }
+
+  /**
+   * update method of robot
+   * update all attached legs and perform walking method
+  */
+  Robot &update()
   {
     m_leg_fr.update();
     m_leg_r.update();
@@ -272,13 +128,23 @@ public:
     switch (m_walk_mode)
     {
     case WalkMode::RESET:
-      resetLegs(restart);
+      this->resetLegs(restart);
       break;
     case WalkMode::NORMAL:
-      walkNormal(restart);
+      this->walkNormal(restart);
+      break;
+    case WalkMode::SMOOTH:
+      this->walkSmooth(restart);
       break;
     }
 
     m_last_walk_mode = m_walk_mode;
+
+    return *this;
   }
+
+  // MOVEMENT METHODS IN ROBOT.CPP
+  void walkSmooth(bool restart);
+  void walkNormal(bool restart);
+  void resetLegs(bool restart);
 };
