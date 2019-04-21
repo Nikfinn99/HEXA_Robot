@@ -74,9 +74,9 @@ void loop()
   }
 
   /*TEST LEG MOVEMENT*/
-  // leg_br.moveAbsoluteX(sx);
-  // leg_br.moveAbsoluteY(sy);
-  // leg_br.moveAbsoluteZ(sz);
+  // leg_br.moveX(sx);
+  // leg_br.moveY(sy);
+  // leg_br.moveZ(sz);
 
   /* INIT SERVOS */
   // Point p(SERVO_ANGLE_1, SERVO_ANGLE_2, SERVO_ANGLE_3);

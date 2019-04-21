@@ -37,9 +37,9 @@ void Robot::walkNormal(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* RLR DOWN */
-        m_leg_fr.moveAbsoluteZ(m_ground_location, step_speed);
-        m_leg_l.moveAbsoluteZ(m_ground_location, step_speed);
-        m_leg_br.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_fr.moveZ(m_ground_location, step_speed);
+        m_leg_l.moveZ(m_ground_location, step_speed);
+        m_leg_br.moveZ(m_ground_location, step_speed);
 
         break;
 
@@ -48,9 +48,9 @@ void Robot::walkNormal(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* LRL UP */
-        m_leg_fl.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
-        m_leg_r.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
-        m_leg_bl.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_fl.moveZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_r.moveZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_bl.moveZ(m_ground_location + m_walk_height, step_speed);
 
         break;
 
@@ -59,14 +59,14 @@ void Robot::walkNormal(bool restart = false)
         step_speed = m_speed_slow; /* SLOW */
 
         /* LRL FRONT */
-        m_leg_fl.moveAbsoluteY(50, step_speed);
-        m_leg_r.moveAbsoluteY(50, step_speed);
-        m_leg_bl.moveAbsoluteY(50, step_speed);
+        m_leg_fl.moveY(50, step_speed);
+        m_leg_r.moveY(50, step_speed);
+        m_leg_bl.moveY(50, step_speed);
 
         /* RLR BACK */
-        m_leg_fr.moveAbsoluteY(-50, step_speed);
-        m_leg_l.moveAbsoluteY(-50, step_speed);
-        m_leg_br.moveAbsoluteY(-50, step_speed);
+        m_leg_fr.moveY(-50, step_speed);
+        m_leg_l.moveY(-50, step_speed);
+        m_leg_br.moveY(-50, step_speed);
 
         break;
 
@@ -75,9 +75,9 @@ void Robot::walkNormal(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* LRL DOWN */
-        m_leg_fl.moveAbsoluteZ(m_ground_location, step_speed);
-        m_leg_r.moveAbsoluteZ(m_ground_location, step_speed);
-        m_leg_bl.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_fl.moveZ(m_ground_location, step_speed);
+        m_leg_r.moveZ(m_ground_location, step_speed);
+        m_leg_bl.moveZ(m_ground_location, step_speed);
 
         break;
 
@@ -86,9 +86,9 @@ void Robot::walkNormal(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* RLR UP */
-        m_leg_fr.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
-        m_leg_l.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
-        m_leg_br.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_fr.moveZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_l.moveZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_br.moveZ(m_ground_location + m_walk_height, step_speed);
 
         break;
 
@@ -97,14 +97,14 @@ void Robot::walkNormal(bool restart = false)
         step_speed = m_speed_slow; /* SLOW */
 
         /* LRL BACK */
-        m_leg_fl.moveAbsoluteY(-50, step_speed);
-        m_leg_r.moveAbsoluteY(-50, step_speed);
-        m_leg_bl.moveAbsoluteY(-50, step_speed);
+        m_leg_fl.moveY(-50, step_speed);
+        m_leg_r.moveY(-50, step_speed);
+        m_leg_bl.moveY(-50, step_speed);
 
         /* RLR FRONT */
-        m_leg_fr.moveAbsoluteY(50, step_speed);
-        m_leg_l.moveAbsoluteY(50, step_speed);
-        m_leg_br.moveAbsoluteY(50, step_speed);
+        m_leg_fr.moveY(50, step_speed);
+        m_leg_l.moveY(50, step_speed);
+        m_leg_br.moveY(50, step_speed);
 
         break;
     } /* end switch step */
@@ -131,12 +131,12 @@ void Robot::resetLegs(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* ALL DOWN */
-        m_leg_fl.moveAbsoluteZ(m_ground_location, step_speed);
-        m_leg_l.moveAbsoluteZ(m_ground_location, step_speed);
-        m_leg_bl.moveAbsoluteZ(m_ground_location, step_speed);
-        m_leg_fr.moveAbsoluteZ(m_ground_location, step_speed);
-        m_leg_r.moveAbsoluteZ(m_ground_location, step_speed);
-        m_leg_br.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_fl.moveZ(m_ground_location, step_speed);
+        m_leg_l.moveZ(m_ground_location, step_speed);
+        m_leg_bl.moveZ(m_ground_location, step_speed);
+        m_leg_fr.moveZ(m_ground_location, step_speed);
+        m_leg_r.moveZ(m_ground_location, step_speed);
+        m_leg_br.moveZ(m_ground_location, step_speed);
 
         break;
 
@@ -146,9 +146,9 @@ void Robot::resetLegs(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* LRL UP */
-        m_leg_fl.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
-        m_leg_r.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
-        m_leg_bl.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_fl.moveZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_r.moveZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_bl.moveZ(m_ground_location + m_walk_height, step_speed);
 
         break;
 
@@ -158,14 +158,14 @@ void Robot::resetLegs(bool restart = false)
 
         /* LRL RESET */
         m_leg_fl
-            .moveAbsoluteX(100, step_speed)
-            .moveAbsoluteY(0, step_speed);
+            .moveX(100, step_speed)
+            .moveY(0, step_speed);
         m_leg_r
-            .moveAbsoluteX(100, step_speed)
-            .moveAbsoluteY(0, step_speed);
+            .moveX(100, step_speed)
+            .moveY(0, step_speed);
         m_leg_bl
-            .moveAbsoluteX(100, step_speed)
-            .moveAbsoluteY(0, step_speed);
+            .moveX(100, step_speed)
+            .moveY(0, step_speed);
 
         break;
 
@@ -174,9 +174,9 @@ void Robot::resetLegs(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* LRL DOWN */
-        m_leg_fl.moveAbsoluteZ(m_ground_location, step_speed);
-        m_leg_r.moveAbsoluteZ(m_ground_location, step_speed);
-        m_leg_bl.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_fl.moveZ(m_ground_location, step_speed);
+        m_leg_r.moveZ(m_ground_location, step_speed);
+        m_leg_bl.moveZ(m_ground_location, step_speed);
 
         break;
 
@@ -186,9 +186,9 @@ void Robot::resetLegs(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* RLR UP */
-        m_leg_fr.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
-        m_leg_l.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
-        m_leg_br.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_fr.moveZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_l.moveZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_br.moveZ(m_ground_location + m_walk_height, step_speed);
         break;
 
     case 5: /* RESET XY of OTHER legs */
@@ -197,14 +197,14 @@ void Robot::resetLegs(bool restart = false)
 
         /* RLR RESET */
         m_leg_fr
-            .moveAbsoluteX(100, step_speed)
-            .moveAbsoluteY(0, step_speed);
+            .moveX(100, step_speed)
+            .moveY(0, step_speed);
         m_leg_l
-            .moveAbsoluteX(100, step_speed)
-            .moveAbsoluteY(0, step_speed);
+            .moveX(100, step_speed)
+            .moveY(0, step_speed);
         m_leg_br
-            .moveAbsoluteX(100, step_speed)
-            .moveAbsoluteY(0, step_speed);
+            .moveX(100, step_speed)
+            .moveY(0, step_speed);
         break;
 
     case 6: /* OTHER legs DOWN */
@@ -212,9 +212,9 @@ void Robot::resetLegs(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* RLR DOWN */
-        m_leg_fr.moveAbsoluteZ(m_ground_location, step_speed);
-        m_leg_l.moveAbsoluteZ(m_ground_location, step_speed);
-        m_leg_br.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_fr.moveZ(m_ground_location, step_speed);
+        m_leg_l.moveZ(m_ground_location, step_speed);
+        m_leg_br.moveZ(m_ground_location, step_speed);
         break;
 
     } /* end switch step */

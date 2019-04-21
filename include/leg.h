@@ -96,7 +96,7 @@ public:
    * @param p Point to move leg to
    * @param speed (optional) time to reach target
   */
-  Leg &moveAbsolutePoint(Point &p, float p_speed = 0.0f)
+  Leg &movePoint(Point &p, float p_speed = 0.0f)
   {
     m_valid_point = true;
 
@@ -113,7 +113,28 @@ public:
     return *this;
   }
 
-  Leg &moveAbsoluteX(float p_x, float p_speed = 0.0f)
+  /**
+   * move leg relative to last movement
+   * 
+   * @param p relative offset in xyz direction
+   * @param speed (optional) time to reach target
+  */
+  Leg &moveRelPoint(Point &p, float p_speed = 0.0f)
+  {
+    if (p_speed > 0)
+    {
+      setSpeed(p_speed);
+    }
+    // add paramater to old position to create new position
+    // uses overridden operator operations
+    m_last_position += p;
+
+    // apply last_position to leg movement
+    setTargets();
+    return *this;
+  }
+
+  Leg &moveX(float p_x, float p_speed = 0.0f)
   {
     if (p_speed > 0)
     {
@@ -127,7 +148,7 @@ public:
     return *this;
   }
 
-  Leg &moveAbsoluteY(float p_y, float p_speed = 0.0f)
+  Leg &moveY(float p_y, float p_speed = 0.0f)
   {
     if (p_speed > 0)
     {
@@ -141,7 +162,7 @@ public:
     return *this;
   }
 
-  Leg &moveAbsoluteZ(float p_z, float p_speed = 0.0f)
+  Leg &moveZ(float p_z, float p_speed = 0.0f)
   {
     if (p_speed > 0)
     {
@@ -149,27 +170,6 @@ public:
     }
 
     m_last_position.z = p_z;
-
-    // apply last_position to leg movement
-    setTargets();
-    return *this;
-  }
-
-  /**
-   * move leg relative to last movement
-   * 
-   * @param p relative offset in xyz direction
-   * @param speed (optional) time to reach target
-  */
-  Leg &moveRelativePoint(Point &p, float p_speed = 0.0f)
-  {
-    if (p_speed > 0)
-    {
-      setSpeed(p_speed);
-    }
-    // add paramater to old position to create new position
-    // uses overridden operator operations
-    m_last_position += p;
 
     // apply last_position to leg movement
     setTargets();
