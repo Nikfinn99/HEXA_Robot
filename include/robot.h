@@ -127,6 +127,8 @@ public:
 
     switch (m_walk_mode)
     {
+    case WalkMode::NONE:
+      break;
     case WalkMode::RESET:
       this->resetLegs(restart);
       break;
