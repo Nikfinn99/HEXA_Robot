@@ -9,6 +9,7 @@
 #include <Arduino.h>
 #include <math.h>
 #include <PWMServo.h>
+#include <SerialStream.h>
 #include "point.h"
 #include "define.h"
 #include "servo_objects.h"
