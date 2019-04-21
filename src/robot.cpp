@@ -36,62 +36,76 @@ void Robot::walkNormal(bool restart = false)
 
         step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 0; i < 6; i += 2)
-        {
-            m_all_legs[i + 1]->moveAbsoluteZ(m_ground_location, step_speed);
-        }
+        /* RLR DOWN */
+        m_leg_fr.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_l.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_br.moveAbsoluteZ(m_ground_location, step_speed);
+
         break;
 
     case 1: /* legs UP */
 
         step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 0; i < 6; i += 2)
-        {
-            m_all_legs[i]->moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
-        }
+        /* LRL UP */
+        m_leg_fl.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_r.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_bl.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
+
         break;
 
     case 2: /* legs FORWARD - OTHERS BACKWARD */
 
         step_speed = m_speed_slow; /* SLOW */
 
-        for (uint8_t i = 0; i < 6; i += 2)
-        {
-            m_all_legs[i]->moveAbsoluteY(50, step_speed);
-            m_all_legs[i + 1]->moveAbsoluteY(-50, step_speed);
-        }
+        /* LRL FRONT */
+        m_leg_fl.moveAbsoluteY(50, step_speed);
+        m_leg_r.moveAbsoluteY(50, step_speed);
+        m_leg_bl.moveAbsoluteY(50, step_speed);
+
+        /* RLR BACK */
+        m_leg_fr.moveAbsoluteY(-50, step_speed);
+        m_leg_l.moveAbsoluteY(-50, step_speed);
+        m_leg_br.moveAbsoluteY(-50, step_speed);
+
         break;
 
     case 3: /* legs DOWN */
 
         step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 0; i < 6; i += 2)
-        {
-            m_all_legs[i]->moveAbsoluteZ(m_ground_location, step_speed);
-        }
+        /* LRL DOWN */
+        m_leg_fl.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_r.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_bl.moveAbsoluteZ(m_ground_location, step_speed);
+
         break;
 
     case 4: /* OTHER legs UP */
 
         step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 0; i < 6; i += 2)
-        {
-            m_all_legs[i + 1]->moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
-        }
+        /* RLR UP */
+        m_leg_fr.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_l.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_br.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
+
         break;
 
     case 5: /* legs BACKWARD - OTHER FORWARD */
 
         step_speed = m_speed_slow; /* SLOW */
 
-        for (uint8_t i = 0; i < 6; i += 2)
-        {
-            m_all_legs[i]->moveAbsoluteY(-50, step_speed);
-            m_all_legs[i + 1]->moveAbsoluteY(50, step_speed);
-        }
+        /* LRL BACK */
+        m_leg_fl.moveAbsoluteY(-50, step_speed);
+        m_leg_r.moveAbsoluteY(-50, step_speed);
+        m_leg_bl.moveAbsoluteY(-50, step_speed);
+
+        /* RLR FRONT */
+        m_leg_fr.moveAbsoluteY(50, step_speed);
+        m_leg_l.moveAbsoluteY(50, step_speed);
+        m_leg_br.moveAbsoluteY(50, step_speed);
+
         break;
     } /* end switch step */
 
@@ -116,11 +130,14 @@ void Robot::resetLegs(bool restart = false)
 
         step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 0; i < 6; i += 2)
-        {
-            m_all_legs[i]->moveAbsoluteZ(m_ground_location, step_speed);
-            m_all_legs[i + 1]->moveAbsoluteZ(m_ground_location, step_speed);
-        }
+        /* ALL DOWN */
+        m_leg_fl.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_l.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_bl.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_fr.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_r.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_br.moveAbsoluteZ(m_ground_location, step_speed);
+
         break;
 
     // EVERY SECOND LEG
@@ -128,31 +145,39 @@ void Robot::resetLegs(bool restart = false)
 
         step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 0; i < 6; i += 2)
-        {
-            m_all_legs[i]->moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
-        }
+        /* LRL UP */
+        m_leg_fl.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_r.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_bl.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
+
         break;
 
     case 2: /* RESET XY of legs */
 
         step_speed = m_speed_slow; /* SLOW */
 
-        for (uint8_t i = 0; i < 6; i += 2)
-        {
-            m_all_legs[i]->moveAbsoluteX(100, step_speed);
-            m_all_legs[i]->moveAbsoluteY(0, step_speed);
-        }
+        /* LRL RESET */
+        m_leg_fl
+            .moveAbsoluteX(100, step_speed)
+            .moveAbsoluteY(0, step_speed);
+        m_leg_r
+            .moveAbsoluteX(100, step_speed)
+            .moveAbsoluteY(0, step_speed);
+        m_leg_bl
+            .moveAbsoluteX(100, step_speed)
+            .moveAbsoluteY(0, step_speed);
+
         break;
 
     case 3: /* legs DOWN */
 
         step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 0; i < 6; i += 2)
-        {
-            m_all_legs[i]->moveAbsoluteZ(m_ground_location, step_speed);
-        }
+        /* LRL DOWN */
+        m_leg_fl.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_r.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_bl.moveAbsoluteZ(m_ground_location, step_speed);
+
         break;
 
     /* REMAINING LEGS */
@@ -160,31 +185,36 @@ void Robot::resetLegs(bool restart = false)
 
         step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 0; i < 6; i += 2)
-        {
-            m_all_legs[i + 1]->moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
-        }
+        /* RLR UP */
+        m_leg_fr.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_l.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_br.moveAbsoluteZ(m_ground_location + m_walk_height, step_speed);
         break;
 
     case 5: /* RESET XY of OTHER legs */
 
         step_speed = m_speed_slow; /* SLOW */
 
-        for (uint8_t i = 0; i < 6; i += 2)
-        {
-            m_all_legs[i + 1]->moveAbsoluteX(100, step_speed);
-            m_all_legs[i + 1]->moveAbsoluteY(0, step_speed);
-        }
+        /* RLR RESET */
+        m_leg_fr
+            .moveAbsoluteX(100, step_speed)
+            .moveAbsoluteY(0, step_speed);
+        m_leg_l
+            .moveAbsoluteX(100, step_speed)
+            .moveAbsoluteY(0, step_speed);
+        m_leg_br
+            .moveAbsoluteX(100, step_speed)
+            .moveAbsoluteY(0, step_speed);
         break;
 
     case 6: /* OTHER legs DOWN */
 
         step_speed = m_speed_fast; /* FAST */
 
-        for (uint8_t i = 0; i < 6; i += 2)
-        {
-            m_all_legs[i + 1]->moveAbsoluteZ(m_ground_location, step_speed);
-        }
+        /* RLR DOWN */
+        m_leg_fr.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_l.moveAbsoluteZ(m_ground_location, step_speed);
+        m_leg_br.moveAbsoluteZ(m_ground_location, step_speed);
         break;
 
     } /* end switch step */
