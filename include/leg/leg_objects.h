@@ -1,7 +1,7 @@
 #pragma once
 
 #include "leg.h"
-#include "servo_objects.h"
+#include "servo/servo_objects.h"
 
 Leg leg_fr(servos_fr, LEG_OFFS, LEG_LEN_1, LEG_LEN_2);
 Leg leg_r(servos_r, LEG_OFFS, LEG_LEN_1, LEG_LEN_2);

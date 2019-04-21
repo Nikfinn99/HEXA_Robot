@@ -1,6 +1,6 @@
 #pragma once
 
-#include "leg.h"
+#include "leg/leg.h"
 #include <SerialStream.h>
 
 enum class WalkMode
@@ -33,31 +33,7 @@ private:
   /**
    * keeps track of step, if current step should be updated depending on time, max steps and if steps are looped
   */
-  void updateStep(unsigned long *step_start, bool *step_running, uint8_t *step, uint16_t p_time, uint8_t p_max_step = 250, bool p_loop = false)
-  {
-    if (*step > p_max_step)
-    {
-      if (p_loop)
-      {
-        (*step) = 0; /* reset to start step */
-      }
-      else
-      {
-        return; /* abort */
-      }
-    }
-
-    if (!(*step_running)) /* not running */
-    {
-      (*step_running) = true; /* init running */
-      (*step_start) = millis();
-    }
-    if (millis() > (*step_start) + p_time) /* finished */
-    {
-      (*step_running) = false;
-      (*step)++; /* next step */
-    }
-  }
+  void updateStep(unsigned long *step_start, bool *step_running, uint8_t *step, uint16_t p_time, uint8_t p_max_step = 250, bool p_loop = false);
 
 public:
   Robot(Leg &leg_fr, Leg &leg_r, Leg &leg_br, Leg &leg_fl, Leg &leg_l, Leg &leg_bl)                             /* references to legs as parameters */
@@ -68,84 +44,26 @@ public:
 
   ~Robot() {}
 
-  /* SETTERS and GETTERS */
+  /* SETTERS */
 
-  Robot &setGroundLocation(float ground_location)
-  {
-    m_ground_location = ground_location;
-    return *this;
-  }
+  Robot &setWalkHeight(float walk_height);
+  Robot &setGroundLocation(float ground_location);
+  Robot &setSpeed(float slow, float fast);
+  Robot &setMode(WalkMode mode);
 
-  float getGroundLocation()
-  {
-    return m_ground_location;
-  }
+  /* GETTERS */
 
-  Robot &setWalkHeight(float walk_height)
-  {
-    m_walk_height = walk_height;
-    return *this;
-  }
-
-  float getWalkHeight()
-  {
-    return m_walk_height;
-  }
-
-  Robot &setSpeed(float slow, float fast)
-  {
-    m_speed_fast = fast;
-    m_speed_slow = slow;
-    return *this;
-  }
-
-  Robot &setMode(WalkMode mode)
-  {
-    m_walk_mode = mode;
-    return *this;
-  }
-
-  WalkMode getMode()
-  {
-    return m_walk_mode;
-  }
+  float getGroundLocation();
+  float getWalkHeight();
+  WalkMode getMode();
 
   /**
    * update method of robot
    * update all attached legs and perform walking method
   */
-  Robot &update()
-  {
-    m_leg_fr.update();
-    m_leg_r.update();
-    m_leg_br.update();
-    m_leg_fl.update();
-    m_leg_l.update();
-    m_leg_bl.update();
+  Robot &update();
 
-    bool restart = m_walk_mode != m_last_walk_mode;
-
-    switch (m_walk_mode)
-    {
-    case WalkMode::NONE:
-      break;
-    case WalkMode::RESET:
-      this->resetLegs(restart);
-      break;
-    case WalkMode::NORMAL:
-      this->walkNormal(restart);
-      break;
-    case WalkMode::SMOOTH:
-      this->walkSmooth(restart);
-      break;
-    }
-
-    m_last_walk_mode = m_walk_mode;
-
-    return *this;
-  }
-
-  /* MOVEMENT METHODS IN ROBOT.CPP */
+  /* MOVEMENT METHODS */
   void walkSmooth(bool restart);
   void walkNormal(bool restart);
   void resetLegs(bool restart);

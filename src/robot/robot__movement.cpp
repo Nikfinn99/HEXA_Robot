@@ -1,5 +1,7 @@
 #include "robot.h"
 
+// MOVEMENT FUNCTIONS
+
 void Robot::walkSmooth(bool restart = false)
 {
     static uint8_t step = 0;

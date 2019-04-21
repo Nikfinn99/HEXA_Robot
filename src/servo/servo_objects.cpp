@@ -1,7 +1,4 @@
-#pragma once
-
-#include <Arduino.h>
-#include <PWMServo.h>
+#include "servo/servo_objects.h"
 
 //servos right
 PWMServo servo_fr_1;

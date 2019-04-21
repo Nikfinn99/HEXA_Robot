@@ -3,7 +3,7 @@
 #include <SerialStream.h>
 #include <FilterLinear.h>
 #include "point.h"
-#include "leg_objects.h"
+#include "leg/leg_objects.h"
 #include "robot.h"
 
 int x = 100;
