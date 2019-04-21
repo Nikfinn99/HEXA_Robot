@@ -51,11 +51,12 @@ public:
    * set time parameter of internal filters
    * zero means instant movement
   */
-  void setSpeed(float p_speed)
+  Leg &setSpeed(float p_speed)
   {
     m_filter_x.setTimeParameter(p_speed);
     m_filter_y.setTimeParameter(p_speed);
     m_filter_z.setTimeParameter(p_speed);
+    return *this;
   }
 
   float getSpeed()
@@ -66,17 +67,18 @@ public:
   /**
    * default position for leg
   */
-  void setInitialPose()
+  Leg &setInitialPose()
   {
     Point p(100, 0, 30);
     setInitialPose(p);
+    return *this;
   }
 
   /**
    * set starting position of leg
    * initialize filter with starting position
   */
-  void setInitialPose(Point &p)
+  Leg &setInitialPose(Point &p)
   {
     m_last_position = p;
     m_valid_point = true;
@@ -84,6 +86,7 @@ public:
     m_filter_x.setStartValue(p.x);
     m_filter_y.setStartValue(p.y);
     m_filter_z.setStartValue(p.z);
+    return *this;
   }
 
   /**
@@ -93,7 +96,7 @@ public:
    * @param p Point to move leg to
    * @param speed (optional) time to reach target
   */
-  void moveAbsolutePoint(Point &p, float p_speed = 0.0f)
+  Leg &moveAbsolutePoint(Point &p, float p_speed = 0.0f)
   {
     m_valid_point = true;
 
@@ -107,9 +110,10 @@ public:
 
     // apply last_position to leg movement
     setTargets();
+    return *this;
   }
 
-  void moveAbsoluteX(float p_x, float p_speed = 0.0f)
+  Leg &moveAbsoluteX(float p_x, float p_speed = 0.0f)
   {
     if (p_speed > 0)
     {
@@ -120,9 +124,10 @@ public:
 
     // apply last_position to leg movement
     setTargets();
+    return *this;
   }
 
-  void moveAbsoluteY(float p_y, float p_speed = 0.0f)
+  Leg &moveAbsoluteY(float p_y, float p_speed = 0.0f)
   {
     if (p_speed > 0)
     {
@@ -133,9 +138,10 @@ public:
 
     // apply last_position to leg movement
     setTargets();
+    return *this;
   }
 
-  void moveAbsoluteZ(float p_z, float p_speed = 0.0f)
+  Leg &moveAbsoluteZ(float p_z, float p_speed = 0.0f)
   {
     if (p_speed > 0)
     {
@@ -146,6 +152,7 @@ public:
 
     // apply last_position to leg movement
     setTargets();
+    return *this;
   }
 
   /**
@@ -154,7 +161,7 @@ public:
    * @param p relative offset in xyz direction
    * @param speed (optional) time to reach target
   */
-  void moveRelativePoint(Point &p, float p_speed = 0.0f)
+  Leg &moveRelativePoint(Point &p, float p_speed = 0.0f)
   {
     if (p_speed > 0)
     {
@@ -166,6 +173,7 @@ public:
 
     // apply last_position to leg movement
     setTargets();
+    return *this;
   }
 
   /**
@@ -174,30 +182,32 @@ public:
    * @param p_angles target angles of servos
    * @param p_transform_angles if absolute angle should be transmitted to servo or computed angle
   */
-  void moveAngle(Point &p_angles, bool p_transform_angles = true)
+  Leg &moveAngle(Point &p_angles, bool p_transform_angles = true)
   {
     // disable movement by point as leg was moved by angle
     m_valid_point = false;
 
     // fast movement by angle
     servoMoveAngle(m_servos, p_angles, m_is_left, p_transform_angles);
+    return *this;
   }
 
   // raise all legs from ground to turn off savely
-  void curlUp()
+  Leg &curlUp()
   {
     // set fixed angles to raise leg from ground
     Point angles(0, 90, 120);
 
     // apply fast movement
     moveAngle(angles);
+    return *this;
   }
 
   /**
    * update method for leg
    * updates filters and if point is valid moves to interpolated point 
   */
-  void update()
+  Leg &update()
   {
     // update filters
     m_filter_x.update();
@@ -216,5 +226,6 @@ public:
 
       servoMoveAngle(m_servos, angles, m_is_left);
     }
+    return *this;
   }
 };
