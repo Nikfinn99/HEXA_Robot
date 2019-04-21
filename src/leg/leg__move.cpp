@@ -1,6 +1,6 @@
 #include "leg/leg.h"
 
-Leg &Leg::movePoint(Point &p, float p_speed = 0.0f)
+Leg &Leg::movePoint(Point &p, float p_speed)
 {
     m_valid_point = true;
 
@@ -17,7 +17,7 @@ Leg &Leg::movePoint(Point &p, float p_speed = 0.0f)
     return *this;
 }
 
-Leg &Leg::moveRelPoint(Point &p, float p_speed = 0.0f)
+Leg &Leg::moveRelPoint(Point &p, float p_speed)
 {
     if (p_speed > 0)
     {
@@ -32,7 +32,7 @@ Leg &Leg::moveRelPoint(Point &p, float p_speed = 0.0f)
     return *this;
 }
 
-Leg &Leg::moveX(float p_x, float p_speed = 0.0f)
+Leg &Leg::moveX(float p_x, float p_speed)
 {
     if (p_speed > 0)
     {
@@ -46,7 +46,7 @@ Leg &Leg::moveX(float p_x, float p_speed = 0.0f)
     return *this;
 }
 
-Leg &Leg::moveY(float p_y, float p_speed = 0.0f)
+Leg &Leg::moveY(float p_y, float p_speed)
 {
     if (p_speed > 0)
     {
@@ -60,7 +60,7 @@ Leg &Leg::moveY(float p_y, float p_speed = 0.0f)
     return *this;
 }
 
-Leg &Leg::moveZ(float p_z, float p_speed = 0.0f)
+Leg &Leg::moveZ(float p_z, float p_speed)
 {
     if (p_speed > 0)
     {
