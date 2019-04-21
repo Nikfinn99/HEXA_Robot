@@ -4,7 +4,7 @@
 #include <FilterLinear.h>
 #include "point.h"
 #include "leg/leg_objects.h"
-#include "robot.h"
+#include "robot/robot.h"
 
 int x = 100;
 bool dir = true;
