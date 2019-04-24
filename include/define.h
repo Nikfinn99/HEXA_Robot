@@ -20,26 +20,26 @@
 #define SERVO_INV_ANG_3 -1
 
 /* define pins for servos */
-#define SERVO_FR_1 1
-#define SERVO_FR_2 2
-#define SERVO_FR_3 3
+#define SERVO_FR_1 14
+#define SERVO_FR_2 16
+#define SERVO_FR_3 17
 
-#define SERVO_R_1 4
-#define SERVO_R_2 5
-#define SERVO_R_3 6
+#define SERVO_R_1 36
+#define SERVO_R_2 37
+#define SERVO_R_3 38
 
-#define SERVO_BR_1 36
-#define SERVO_BR_2 37
-#define SERVO_BR_3 38
+#define SERVO_BR_1 30
+#define SERVO_BR_2 29
+#define SERVO_BR_3 35
 
-#define SERVO_FL_1 10
-#define SERVO_FL_2 11
-#define SERVO_FL_3 12
+#define SERVO_FL_1 2
+#define SERVO_FL_2 3
+#define SERVO_FL_3 4
 
-#define SERVO_L_1 13
-#define SERVO_L_2 14
-#define SERVO_L_3 15
+#define SERVO_L_1 5
+#define SERVO_L_2 6
+#define SERVO_L_3 7
 
-#define SERVO_BL_1 16
-#define SERVO_BL_2 17
-#define SERVO_BL_3 18
+#define SERVO_BL_1 8
+#define SERVO_BL_2 9
+#define SERVO_BL_3 10
