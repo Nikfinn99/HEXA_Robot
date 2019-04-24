@@ -26,11 +26,11 @@ void servosAttach()
 }
 
 template <int size>
-void servosReset(PWMServo *(&servos)[size])
+void servosReset(IServo *(&servos)[size])
 {
     for (uint8_t i = 0; i < size; i++)
     {
-        PWMServo *servo = servos[i];
+        IServo *servo = servos[i];
         switch (i % 3) // select correct angle depending on position in vector
         {
         case 0:
@@ -106,7 +106,7 @@ Point servoComputeAllAngles(const Point &p, float offset, float length1, float l
     return angles;
 }
 
-void servoMoveAngle(PWMServo *(&servos)[3], Point angles, bool left, bool transform_angles)
+void servoMoveAngle(IServo *(&servos)[3], Point angles, bool left, bool transform_angles)
 {
     if (transform_angles)
     {

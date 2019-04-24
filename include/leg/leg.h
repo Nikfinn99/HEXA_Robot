@@ -1,6 +1,6 @@
 #pragma once
 
-#include <PWMServo.h>
+#include "IServo.h"
 #include <Point.h>
 #include <FilterLinear.h>
 #include "servo/servo_functions.h"
@@ -8,7 +8,7 @@
 class Leg
 {
 private:
-  PWMServo *(&m_servos)[3];
+  IServo *(&m_servos)[3];
 
   float m_offset, m_length1, m_length2;
   bool m_is_left;
@@ -25,7 +25,7 @@ private:
   void setTargets();
 
 public:
-  Leg(PWMServo *(&servos)[3], float offset, float length1, float length2, bool left = false)
+  Leg(IServo *(&servos)[3], float offset, float length1, float length2, bool left = false)
       : m_servos(servos), m_offset(offset), m_length1(length1), m_length2(length2), m_is_left(left) {}
 
   ~Leg() {}

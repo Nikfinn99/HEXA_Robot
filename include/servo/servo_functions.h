@@ -8,7 +8,7 @@
 
 #include <Arduino.h>
 #include <math.h>
-#include <PWMServo.h>
+#include "IServo.h"
 #include <SerialStream.h>
 #include "point.h"
 #include "define.h"
@@ -29,7 +29,7 @@ void servosAttach();
  * @return void
 */
 template <int size>
-void servosReset(PWMServo *(&servos)[size]);
+void servosReset(IServo *(&servos)[size]);
 
 /**
  * Calculate the required leg length even if the leg is not completely sideways
@@ -103,4 +103,4 @@ Point servoComputeAllAngles(const Point &p, float offset, float length1, float l
  * @param (left) if leg is on the left side of robot
  * @param (transform_angles) if method should invert and offset angles
 */
-void servoMoveAngle(PWMServo *(&servos)[3], Point angles, bool left = false, bool transform_angles = true);
+void servoMoveAngle(IServo *(&servos)[3], Point angles, bool left = false, bool transform_angles = true);
