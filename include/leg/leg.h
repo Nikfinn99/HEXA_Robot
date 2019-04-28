@@ -10,10 +10,10 @@ class Leg
 private:
   IServo *(&m_servos)[3];
 
-  float m_offset, m_length1, m_length2;
-  bool m_is_left;
+  const float m_offset, m_length1, m_length2, m_rotation;
+  const bool m_is_left;
 
-  Point m_last_position;
+  Point m_reset_point, m_last_position;
   bool m_valid_point = false;
 
   FilterLinear m_filter_x, m_filter_y, m_filter_z;
@@ -25,8 +25,8 @@ private:
   void setTargets();
 
 public:
-  Leg(IServo *(&servos)[3], float offset, float length1, float length2, bool left = false)
-      : m_servos(servos), m_offset(offset), m_length1(length1), m_length2(length2), m_is_left(left) {}
+  Leg(IServo *(&servos)[3], float offset, float length1, float length2, float rotation, bool left = false)
+      : m_servos(servos), m_offset(offset), m_length1(length1), m_length2(length2), m_rotation(rotation), m_is_left(left) {}
 
   ~Leg() {}
 
@@ -34,6 +34,11 @@ public:
    * returns the current point of leg
   */
   Point getCurrentPoint();
+
+  /**
+   * returns the reset point
+  */
+ Point getResetPoint();
 
   /**
    * returns the current leg speed
@@ -55,7 +60,13 @@ public:
    * set starting position of leg
    * initialize filter with starting position
   */
-  Leg &setInitialPose(Point &p);
+  Leg &setInitialPose(const Point &p);
+
+  /**
+   * set reset point
+   * this point will be used as reference for relative movement
+  */
+  Leg &setResetPoint(const Point &p);
 
   /**
    * move leg to absolute point
@@ -64,24 +75,33 @@ public:
    * @param p Point to move leg to
    * @param speed (optional) time to reach target
   */
-  Leg &movePoint(Point &p, float p_speed = 0.0f);
+  Leg &movePoint(Point &p, float p_speed = -1);
 
   /**
-   * move leg relative to last movement
+   * move leg relative to reset position
    * 
    * @param p relative offset in xyz direction
    * @param speed (optional) time to reach target
   */
-  Leg &moveRelPoint(Point &p, float p_speed = 0.0f);
+  Leg &moveRelPoint(Point &p, float p_speed = -1);
 
   /**
    * move single coorinate absolute without affecting other coorinates
    * @param p_ new coordinate position
    * @param (p_speed) optional speed to reach target
   */
-  Leg &moveX(float p_x, float p_speed = 0.0f);
-  Leg &moveY(float p_y, float p_speed = 0.0f);
-  Leg &moveZ(float p_z, float p_speed = 0.0f);
+  Leg &moveAbsX(float p_x, float p_speed = -1);
+  Leg &moveAbsY(float p_y, float p_speed = -1);
+  Leg &moveAbsZ(float p_z, float p_speed = -1);
+
+  /**
+   * move single coorinate relative to reset position
+   * @param p_ new coordinate position
+   * @param (p_speed) optional speed to reach target
+  */
+  Leg &moveRelX(float p_x, float p_speed = -1);
+  Leg &moveRelY(float p_y, float p_speed = -1);
+  Leg &moveRelZ(float p_z, float p_speed = -1);
 
   /**
    * Move leg by angle instead of point

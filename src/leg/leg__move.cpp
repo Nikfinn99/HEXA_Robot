@@ -10,7 +10,7 @@ Leg &Leg::movePoint(Point &p, float p_speed)
     }
 
     // copy parameter to internal variable to enable relative movement
-    m_last_position = p;
+    m_last_position = p.rotateZ(m_rotation);
 
     // apply last_position to leg movement
     setTargets();
@@ -19,25 +19,21 @@ Leg &Leg::movePoint(Point &p, float p_speed)
 
 Leg &Leg::moveRelPoint(Point &p, float p_speed)
 {
-    if (p_speed > 0)
-    {
-        setSpeed(p_speed);
-    }
-    // add paramater to old position to create new position
-    // uses overridden operator operations
-    m_last_position += p;
+    setSpeed(p_speed);
+
+    // add relative point to reset position to get new position
+    m_last_position = m_reset_point + p;
 
     // apply last_position to leg movement
     setTargets();
     return *this;
 }
 
-Leg &Leg::moveX(float p_x, float p_speed)
+/* ABSOLUTE COORDINATE */
+
+Leg &Leg::moveAbsX(float p_x, float p_speed)
 {
-    if (p_speed > 0)
-    {
-        setSpeed(p_speed);
-    }
+    setSpeed(p_speed);
 
     m_last_position.x = p_x;
 
@@ -46,12 +42,9 @@ Leg &Leg::moveX(float p_x, float p_speed)
     return *this;
 }
 
-Leg &Leg::moveY(float p_y, float p_speed)
+Leg &Leg::moveAbsY(float p_y, float p_speed)
 {
-    if (p_speed > 0)
-    {
-        setSpeed(p_speed);
-    }
+    setSpeed(p_speed);
 
     m_last_position.y = p_y;
 
@@ -60,12 +53,9 @@ Leg &Leg::moveY(float p_y, float p_speed)
     return *this;
 }
 
-Leg &Leg::moveZ(float p_z, float p_speed)
+Leg &Leg::moveAbsZ(float p_z, float p_speed)
 {
-    if (p_speed > 0)
-    {
-        setSpeed(p_speed);
-    }
+    setSpeed(p_speed);
 
     m_last_position.z = p_z;
 
@@ -73,6 +63,43 @@ Leg &Leg::moveZ(float p_z, float p_speed)
     setTargets();
     return *this;
 }
+
+/* RELATIVE COORDINATE */
+
+Leg &Leg::moveRelX(float p_x, float p_speed)
+{
+    setSpeed(p_speed);
+
+    m_last_position.x = m_reset_point.x + p_x;
+
+    // apply last_position to leg movement
+    setTargets();
+    return *this;
+}
+
+Leg &Leg::moveRelY(float p_y, float p_speed)
+{
+    setSpeed(p_speed);
+
+    m_last_position.y = m_reset_point.y + p_y;
+
+    // apply last_position to leg movement
+    setTargets();
+    return *this;
+}
+
+Leg &Leg::moveRelZ(float p_z, float p_speed)
+{
+    setSpeed(p_speed);
+
+    m_last_position.z = m_reset_point.z + p_z;
+
+    // apply last_position to leg movement
+    setTargets();
+    return *this;
+}
+
+/* ANGLE MOVEMENT */
 
 Leg &Leg::moveAngle(Point &p_angles, bool p_transform_angles)
 {
