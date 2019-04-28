@@ -4,12 +4,14 @@
 
 Robot &Robot::update()
 {
-    m_leg_fr.update();
-    m_leg_r.update();
-    m_leg_br.update();
-    m_leg_fl.update();
-    m_leg_l.update();
-    m_leg_bl.update();
+    Point reset_point(m_walk_width, 0, m_ground_location);
+    
+    m_leg_fr.setResetPoint(reset_point).update();
+    m_leg_r.setResetPoint(reset_point).update();
+    m_leg_br.setResetPoint(reset_point).update();
+    m_leg_fl.setResetPoint(reset_point).update();
+    m_leg_l.setResetPoint(reset_point).update();
+    m_leg_bl.setResetPoint(reset_point).update();
 
     bool restart = m_walk_mode != m_last_walk_mode;
 

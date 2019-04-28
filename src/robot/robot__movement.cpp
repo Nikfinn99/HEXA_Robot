@@ -39,9 +39,9 @@ void Robot::walkNormal(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* RLR DOWN */
-        m_leg_fr.moveZ(m_ground_location, step_speed);
-        m_leg_l.moveZ(m_ground_location, step_speed);
-        m_leg_br.moveZ(m_ground_location, step_speed);
+        m_leg_fr.moveRelZ(0, step_speed);
+        m_leg_l.moveRelZ(0, step_speed);
+        m_leg_br.moveRelZ(0, step_speed);
 
         break;
 
@@ -50,9 +50,9 @@ void Robot::walkNormal(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* LRL UP */
-        m_leg_fl.moveZ(m_ground_location + m_walk_height, step_speed);
-        m_leg_r.moveZ(m_ground_location + m_walk_height, step_speed);
-        m_leg_bl.moveZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_fl.moveRelZ(m_walk_height, step_speed);
+        m_leg_r.moveRelZ(m_walk_height, step_speed);
+        m_leg_bl.moveRelZ(m_walk_height, step_speed);
 
         break;
 
@@ -61,14 +61,14 @@ void Robot::walkNormal(bool restart = false)
         step_speed = m_speed_slow; /* SLOW */
 
         /* LRL FRONT */
-        m_leg_fl.moveY(50, step_speed);
-        m_leg_r.moveY(50, step_speed);
-        m_leg_bl.moveY(50, step_speed);
+        m_leg_fl.moveRelY(50, step_speed);
+        m_leg_r.moveRelY(50, step_speed);
+        m_leg_bl.moveRelY(50, step_speed);
 
         /* RLR BACK */
-        m_leg_fr.moveY(-50, step_speed);
-        m_leg_l.moveY(-50, step_speed);
-        m_leg_br.moveY(-50, step_speed);
+        m_leg_fr.moveRelY(-50, step_speed);
+        m_leg_l.moveRelY(-50, step_speed);
+        m_leg_br.moveRelY(-50, step_speed);
 
         break;
 
@@ -77,9 +77,9 @@ void Robot::walkNormal(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* LRL DOWN */
-        m_leg_fl.moveZ(m_ground_location, step_speed);
-        m_leg_r.moveZ(m_ground_location, step_speed);
-        m_leg_bl.moveZ(m_ground_location, step_speed);
+        m_leg_fl.moveRelZ(0, step_speed);
+        m_leg_r.moveRelZ(0, step_speed);
+        m_leg_bl.moveRelZ(0, step_speed);
 
         break;
 
@@ -88,9 +88,9 @@ void Robot::walkNormal(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* RLR UP */
-        m_leg_fr.moveZ(m_ground_location + m_walk_height, step_speed);
-        m_leg_l.moveZ(m_ground_location + m_walk_height, step_speed);
-        m_leg_br.moveZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_fr.moveRelZ(m_walk_height, step_speed);
+        m_leg_l.moveRelZ(m_walk_height, step_speed);
+        m_leg_br.moveRelZ(m_walk_height, step_speed);
 
         break;
 
@@ -99,14 +99,14 @@ void Robot::walkNormal(bool restart = false)
         step_speed = m_speed_slow; /* SLOW */
 
         /* LRL BACK */
-        m_leg_fl.moveY(-50, step_speed);
-        m_leg_r.moveY(-50, step_speed);
-        m_leg_bl.moveY(-50, step_speed);
+        m_leg_fl.moveRelY(-50, step_speed);
+        m_leg_r.moveRelY(-50, step_speed);
+        m_leg_bl.moveRelY(-50, step_speed);
 
         /* RLR FRONT */
-        m_leg_fr.moveY(50, step_speed);
-        m_leg_l.moveY(50, step_speed);
-        m_leg_br.moveY(50, step_speed);
+        m_leg_fr.moveRelY(50, step_speed);
+        m_leg_l.moveRelY(50, step_speed);
+        m_leg_br.moveRelY(50, step_speed);
 
         break;
     } /* end switch step */
@@ -133,12 +133,12 @@ void Robot::resetLegs(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* ALL DOWN */
-        m_leg_fl.moveZ(m_ground_location, step_speed);
-        m_leg_l.moveZ(m_ground_location, step_speed);
-        m_leg_bl.moveZ(m_ground_location, step_speed);
-        m_leg_fr.moveZ(m_ground_location, step_speed);
-        m_leg_r.moveZ(m_ground_location, step_speed);
-        m_leg_br.moveZ(m_ground_location, step_speed);
+        m_leg_fl.moveRelZ(0, step_speed);
+        m_leg_l.moveRelZ(0, step_speed);
+        m_leg_bl.moveRelZ(0, step_speed);
+        m_leg_fr.moveRelZ(0, step_speed);
+        m_leg_r.moveRelZ(0, step_speed);
+        m_leg_br.moveRelZ(0, step_speed);
 
         break;
 
@@ -148,9 +148,9 @@ void Robot::resetLegs(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* LRL UP */
-        m_leg_fl.moveZ(m_ground_location + m_walk_height, step_speed);
-        m_leg_r.moveZ(m_ground_location + m_walk_height, step_speed);
-        m_leg_bl.moveZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_fl.moveRelZ(m_walk_height, step_speed);
+        m_leg_r.moveRelZ(m_walk_height, step_speed);
+        m_leg_bl.moveRelZ(m_walk_height, step_speed);
 
         break;
 
@@ -160,14 +160,14 @@ void Robot::resetLegs(bool restart = false)
 
         /* LRL RESET */
         m_leg_fl
-            .moveX(100, step_speed)
-            .moveY(0, step_speed);
+            .moveRelX(0, step_speed)
+            .moveRelY(0, step_speed);
         m_leg_r
-            .moveX(100, step_speed)
-            .moveY(0, step_speed);
+            .moveRelX(0, step_speed)
+            .moveRelY(0, step_speed);
         m_leg_bl
-            .moveX(100, step_speed)
-            .moveY(0, step_speed);
+            .moveRelX(0, step_speed)
+            .moveRelY(0, step_speed);
 
         break;
 
@@ -176,9 +176,9 @@ void Robot::resetLegs(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* LRL DOWN */
-        m_leg_fl.moveZ(m_ground_location, step_speed);
-        m_leg_r.moveZ(m_ground_location, step_speed);
-        m_leg_bl.moveZ(m_ground_location, step_speed);
+        m_leg_fl.moveRelZ(0, step_speed);
+        m_leg_r.moveRelZ(0, step_speed);
+        m_leg_bl.moveRelZ(0, step_speed);
 
         break;
 
@@ -188,9 +188,9 @@ void Robot::resetLegs(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* RLR UP */
-        m_leg_fr.moveZ(m_ground_location + m_walk_height, step_speed);
-        m_leg_l.moveZ(m_ground_location + m_walk_height, step_speed);
-        m_leg_br.moveZ(m_ground_location + m_walk_height, step_speed);
+        m_leg_fr.moveRelZ(m_walk_height, step_speed);
+        m_leg_l.moveRelZ(m_walk_height, step_speed);
+        m_leg_br.moveRelZ(m_walk_height, step_speed);
         break;
 
     case 5: /* RESET XY of OTHER legs */
@@ -199,14 +199,14 @@ void Robot::resetLegs(bool restart = false)
 
         /* RLR RESET */
         m_leg_fr
-            .moveX(100, step_speed)
-            .moveY(0, step_speed);
+            .moveRelX(0, step_speed)
+            .moveRelY(0, step_speed);
         m_leg_l
-            .moveX(100, step_speed)
-            .moveY(0, step_speed);
+            .moveRelX(0, step_speed)
+            .moveRelY(0, step_speed);
         m_leg_br
-            .moveX(100, step_speed)
-            .moveY(0, step_speed);
+            .moveRelX(0, step_speed)
+            .moveRelY(0, step_speed);
         break;
 
     case 6: /* OTHER legs DOWN */
@@ -214,9 +214,9 @@ void Robot::resetLegs(bool restart = false)
         step_speed = m_speed_fast; /* FAST */
 
         /* RLR DOWN */
-        m_leg_fr.moveZ(m_ground_location, step_speed);
-        m_leg_l.moveZ(m_ground_location, step_speed);
-        m_leg_br.moveZ(m_ground_location, step_speed);
+        m_leg_fr.moveRelZ(0, step_speed);
+        m_leg_l.moveRelZ(0, step_speed);
+        m_leg_br.moveRelZ(0, step_speed);
         break;
 
     } /* end switch step */
