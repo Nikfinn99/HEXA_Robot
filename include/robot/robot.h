@@ -25,6 +25,7 @@ private:
 
   float m_ground_location = -50;
   float m_walk_height = 20;
+  float m_walk_width = 50;
 
   float m_speed_slow = 200;
   float m_speed_fast = 100;
@@ -49,14 +50,16 @@ public:
 
   /* SETTERS */
 
-  Robot &setWalkHeight(float walk_height);
   Robot &setGroundLocation(float ground_location);
+  Robot &setWalkWidth(float walk_width);
+  Robot &setWalkHeight(float walk_height);
   Robot &setSpeed(float slow, float fast);
   Robot &setMode(WalkMode mode);
 
   /* GETTERS */
 
   float getGroundLocation();
+  float getWalkWidth();
   float getWalkHeight();
   WalkMode getMode();
 

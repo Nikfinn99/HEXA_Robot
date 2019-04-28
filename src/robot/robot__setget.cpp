@@ -8,6 +8,12 @@ Robot &Robot::setGroundLocation(float ground_location)
     return *this;
 }
 
+Robot &Robot::setWalkWidth(float walk_width)
+{
+    m_walk_width = walk_width;
+    return *this;
+}
+
 Robot &Robot::setWalkHeight(float walk_height)
 {
     m_walk_height = walk_height;
@@ -32,6 +38,11 @@ Robot &Robot::setMode(WalkMode mode)
 float Robot::getGroundLocation()
 {
     return m_ground_location;
+}
+
+float Robot::getWalkWidth()
+{
+    return m_walk_width;
 }
 
 float Robot::getWalkHeight()
