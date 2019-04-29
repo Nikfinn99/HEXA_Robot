@@ -10,6 +10,7 @@ int sx = 100, sy = 0, sz = 30;
 int speed = 500;
 int height = 20;
 int ground = -50;
+int width = 50;
 
 Robot robot(leg_fr, leg_r, leg_br, leg_fl, leg_l, leg_bl);
 
@@ -35,7 +36,7 @@ void setup()
   leg_l.setInitialPose();
   leg_bl.setInitialPose();
 
-  robot.setGroundLocation(-50).setWalkHeight(20).setSpeed(speed, speed / 2);
+  robot.setWalkWidth(width).setGroundLocation(ground).setWalkHeight(height).setSpeed(speed, speed / 2);
 
   Serial << "---SETUP-END---" << endl;
 }
@@ -68,10 +69,13 @@ void loop()
     case 'g': /* leg ground location */
       ground = Serial.parseInt();
       break;
+    case 'w': /* leg ground location */
+      width = Serial.parseInt();
+      break;
     case 'r': /* reset all legs */
       robot.setMode(WalkMode::RESET);
       break;
-    case 'w': /* enable walking */
+    case 'f': /* enable walking */
       robot.setMode(WalkMode::NORMAL);
       break;
     }
@@ -80,6 +84,7 @@ void loop()
   robot.setSpeed(speed, speed / 2);
   robot.setWalkHeight(height);
   robot.setGroundLocation(ground);
+  robot.setWalkWidth(width);
 
   /*TEST LEG MOVEMENT*/
   // leg_fl.moveX(sx);

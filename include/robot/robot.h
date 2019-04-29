@@ -36,6 +36,7 @@ private:
   void updateStep(unsigned long *step_start, bool *step_running, uint8_t *step, uint16_t p_time, uint8_t p_max_step = 250, bool p_loop = false);
 
   /* MOVEMENT METHODS */
+  
   void walkSmooth(bool restart);
   void walkNormal(bool restart);
   void resetLegs(bool restart);
