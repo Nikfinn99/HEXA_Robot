@@ -79,15 +79,36 @@ float servoComputeAngle1(const Point &p)
     return atan2(p.y, p.x);
 }
 
-float servoLimitAngle(const float angle)
+float servoLimitAngle(const float angle, const float save, const float min, const float max)
 {
     if (isnan(angle)) // error during calculation -> save position
-        return 90.0f;
-    if (angle > 180.0f)
-        return 180.0f;
-    if (angle < 0.0f)
-        return 0.0f;
+        return save;
+    if (angle > 180)
+        return 180;
+    if (angle < 0)
+        return 0;
+    if (angle > max)
+        return max;
+    if (angle < min)
+        return min;
     return angle;
+}
+
+void servoSecureWriteAngles(IServo *(&servos)[3], const Point &angles)
+{
+    // write angles to servos
+    if (!isnan(angles.a1))
+    {
+        servos[0]->write(servoLimitAngle(angles.a1, SERVO_ANGLE_1, SERVO_MIN_1, SERVO_MAX_1));
+    }
+    if (!isnan(angles.a2))
+    {
+        servos[1]->write(servoLimitAngle(angles.a2, SERVO_ANGLE_2, SERVO_MIN_2, SERVO_MAX_2));
+    }
+    if (!isnan(angles.a3))
+    {
+        servos[2]->write(servoLimitAngle(angles.a3, SERVO_ANGLE_3, SERVO_MIN_3, SERVO_MAX_3));
+    }
 }
 
 void servoPrintAngles(const Point &angles, const char *prefix)
@@ -124,9 +145,5 @@ void servoMoveAngle(IServo *(&servos)[3], Point angles, bool left, bool transfor
         angles.a2 += SERVO_ANGLE_2;
         angles.a3 += SERVO_ANGLE_3;
     }
-
-    // write angles to servos
-    servos[0]->write(servoLimitAngle(angles.a1));
-    servos[1]->write(servoLimitAngle(angles.a2));
-    servos[2]->write(servoLimitAngle(angles.a3));
+    servoSecureWriteAngles(servos, angles);
 }

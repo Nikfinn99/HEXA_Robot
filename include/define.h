@@ -19,6 +19,14 @@
 #define SERVO_INV_ANG_2 1
 #define SERVO_INV_ANG_3 -1
 
+/* define max rotation distance of servos from zero point */
+#define SERVO_MIN_1 60
+#define SERVO_MIN_2 0
+#define SERVO_MIN_3 0
+#define SERVO_MAX_1 120
+#define SERVO_MAX_2 180
+#define SERVO_MAX_3 180
+
 /* define pins for servos */
 #define SERVO_FR_1 14
 #define SERVO_FR_2 16

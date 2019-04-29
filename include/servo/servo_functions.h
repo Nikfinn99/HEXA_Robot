@@ -69,12 +69,19 @@ float servoComputeAngle2(const Point &p, float offset, float length1, float leng
 float servoComputeAngle1(const Point &p);
 
 /**
- * Limit Angle between 0 and 180 to not destroy servo
+ * Limit Angle between limits to not destroy servo and avoid collisions between legs
  * 
  * @param angle angle to limit
  * @return limited angle
 */
-float servoLimitAngle(const float angle);
+float servoLimitAngle(const float angle, const float save, const float min, const float max);
+
+/**
+ * Write angles to servos in a secure way by limiting to set limits and endstops of servos
+ * @param servos array of pointers to servos which should be moved
+ * @param angles Point of angles for target movement
+*/
+void servoSecureWriteAngles(IServo *(&servos)[3], const Point &angles);
 
 /**
  * Print angles to Serial with optional prefix
