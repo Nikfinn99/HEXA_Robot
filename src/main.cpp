@@ -6,11 +6,19 @@
 #include "leg/leg_objects.h"
 #include "robot/robot.h"
 
-int sx = 100, sy = 0, sz = 30;
-int speed = 500;
-int height = 20;
-int ground = -50;
-int width = 50;
+enum class ModeSelect
+{
+  ROBOT,
+  LEG,
+  SERVO
+};
+
+enum class ModeLeg
+{
+  ABSOLUTE,
+  RELATIVE,
+  ANGLE
+};
 
 Robot robot(leg_fr, leg_r, leg_br, leg_fl, leg_l, leg_bl);
 
@@ -36,14 +44,18 @@ void setup()
   leg_l.setInitialPose();
   leg_bl.setInitialPose();
 
-  robot.setWalkWidth(width).setGroundLocation(ground).setWalkHeight(height).setSpeed(speed, speed / 2);
+  robot.setWalkWidth(50).setGroundLocation(-50).setWalkHeight(20).setSpeed(500, 500 / 2).update();
 
   Serial << "---SETUP-END---" << endl;
 }
 
 void loop()
 {
-  robot.update();
+  static ModeSelect current_mode = ModeSelect::ROBOT;
+  static ModeLeg current_leg_mode = ModeLeg::ABSOLUTE;
+  static Leg *current_leg = nullptr;
+  static IServo *current_servo = nullptr;
+  static int sx, sy, sz, sa, sb, sc, speed, ground, height, width;
 
   /* parse incoming serial data */
   while (Serial.available())
@@ -51,54 +63,175 @@ void loop()
     char c = Serial.read();
     switch (c)
     {
-    case 'x': /* x coordinate */
+    case 'm':
+    case 'M':
+    {
+      int m = Serial.parseInt();
+      switch (m)
+      {
+      case 0:
+        current_mode = ModeSelect::ROBOT;
+        break;
+      case 1:
+        current_mode = ModeSelect::LEG;
+        break;
+      case 2:
+        current_mode = ModeSelect::SERVO;
+        break;
+      default:
+        Serial << "Invalid Mode Selection" << endl;
+        break;
+      }
+    }
+    break;
+    case 'v':
+    case 'V':
+    {
+      int v = Serial.parseInt();
+      switch (v)
+      {
+      case 0:
+        current_leg_mode = ModeLeg::ABSOLUTE;
+        break;
+      case 1:
+        current_leg_mode = ModeLeg::RELATIVE;
+        break;
+      case 2:
+        current_leg_mode = ModeLeg::ANGLE;
+        break;
+      default:
+        Serial << "Invalid Leg Mode Selection" << endl;
+        break;
+      }
+    }
+    break;
+    case 's':
+    case 'S':
+    {
+      int s = Serial.parseInt() - 1;
+      if (s >= 0 && s < 18)
+      {
+        current_servo = servos_all[s];
+      }
+      else
+      {
+        Serial << "Invalid Servo Selection" << endl;
+      }
+    }
+    break;
+    case 'l':
+    case 'L':
+    {
+      int l = Serial.parseInt() - 1;
+      if (l >= 0 && l < 6)
+      {
+        switch (l)
+        {
+        case 0:
+          current_leg = &leg_fr;
+          break;
+        case 1:
+          current_leg = &leg_r;
+          break;
+        case 2:
+          current_leg = &leg_br;
+          break;
+        case 3:
+          current_leg = &leg_fl;
+          break;
+        case 4:
+          current_leg = &leg_l;
+          break;
+        case 5:
+          current_leg = &leg_bl;
+          break;
+        }
+      }
+      else
+      {
+        Serial << "Invalid Leg Selection" << endl;
+      }
+    }
+    break;
+    case 'x':
+    case 'X':
       sx = Serial.parseInt();
       break;
-    case 'y': /* y coordinate */
+    case 'y':
+    case 'Y':
       sy = Serial.parseInt();
       break;
-    case 'z': /* z coordinate */
+    case 'z':
+    case 'Z':
       sz = Serial.parseInt();
       break;
-    case 's': /* leg movement speed */
+    case 'a':
+    case 'A':
+      sa = Serial.parseInt();
+      break;
+    case 'b':
+    case 'B':
+      sb = Serial.parseInt();
+      break;
+    case 'c':
+    case 'C':
+      sc = Serial.parseInt();
+      break;
+    case 'f':
+    case 'F':
       speed = Serial.parseInt();
+      if (speed < 0)
+      {
+        speed = 500;
+        Serial << "Invalid Speed" << endl;
+      }
       break;
-    case 'h': /* leg walk height */
-      height = Serial.parseInt();
-      break;
-    case 'g': /* leg ground location */
+    case 'g':
+    case 'G':
       ground = Serial.parseInt();
       break;
-    case 'w': /* leg ground location */
+    case 'h':
+    case 'H':
+      height = Serial.parseInt();
+      break;
+    case 'w':
+    case 'W':
       width = Serial.parseInt();
-      break;
-    case 'r': /* reset all legs */
-      robot.setMode(WalkMode::RESET);
-      break;
-    case 'f': /* enable walking */
-      robot.setMode(WalkMode::NORMAL);
       break;
     }
   }
 
-  robot.setSpeed(speed, speed / 2);
-  robot.setWalkHeight(height);
-  robot.setGroundLocation(ground);
-  robot.setWalkWidth(width);
-
-  /*TEST LEG MOVEMENT*/
-  // leg_fl.moveX(sx);
-  // leg_fl.moveY(sy);
-  // leg_fl.moveZ(sz);
-
-  /* INIT SERVOS */
-  // Point p(SERVO_ANGLE_1, SERVO_ANGLE_2, SERVO_ANGLE_3);
-  // leg_fr.moveAngle(p, false);
-  // leg_r.moveAngle(p, false);
-  // leg_br.moveAngle(p, false);
-  // leg_fl.moveAngle(p, false);
-  // leg_l.moveAngle(p, false);
-  // leg_bl.moveAngle(p, false);
+  switch (current_mode)
+  {
+  case ModeSelect::ROBOT:
+    robot.setGroundLocation(ground).setSpeed(speed, speed / 2).setWalkHeight(height).setWalkWidth(width).update();
+    break;
+  case ModeSelect::LEG:
+    if (current_leg != nullptr)
+    {
+      current_leg->setSpeed(speed);
+      switch (current_leg_mode)
+      {
+      case ModeLeg::ABSOLUTE:
+        current_leg->moveAbsX(sx).moveAbsY(sy).moveAbsZ(sz);
+        break;
+      case ModeLeg::RELATIVE:
+        current_leg->moveRelX(sx).moveRelY(sy).moveRelZ(sz);
+        break;
+      case ModeLeg::ANGLE:
+        Point angles(sa, sb, sc);
+        current_leg->moveAngle(angles);
+        break;
+      }
+    }
+    break;
+  case ModeSelect::SERVO:
+    if (current_servo != nullptr)
+    {
+      current_servo->write(sa);
+    }
+    break;
+  }
 
   delay(5);
 }
