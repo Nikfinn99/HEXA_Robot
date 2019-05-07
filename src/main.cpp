@@ -63,7 +63,7 @@ void loop()
     char c = Serial.read();
     switch (c)
     {
-    case 'm':
+    case 'm': // CONTROL MODE
     case 'M':
     {
       int m = Serial.parseInt();
@@ -84,7 +84,7 @@ void loop()
       }
     }
     break;
-    case 'v':
+    case 'v': // LEG MODE
     case 'V':
     {
       int v = Serial.parseInt();
@@ -105,7 +105,7 @@ void loop()
       }
     }
     break;
-    case 's':
+    case 's': // SERVO ID
     case 'S':
     {
       int s = Serial.parseInt() - 1;
@@ -119,7 +119,7 @@ void loop()
       }
     }
     break;
-    case 'l':
+    case 'l': // LEG ID
     case 'L':
     {
       int l = Serial.parseInt() - 1;
@@ -153,31 +153,31 @@ void loop()
       }
     }
     break;
-    case 'x':
+    case 'x': // X
     case 'X':
       sx = Serial.parseInt();
       break;
-    case 'y':
+    case 'y': // y
     case 'Y':
       sy = Serial.parseInt();
       break;
-    case 'z':
+    case 'z': // z
     case 'Z':
       sz = Serial.parseInt();
       break;
-    case 'a':
+    case 'a': // angle 1
     case 'A':
       sa = Serial.parseInt();
       break;
-    case 'b':
+    case 'b': // angle 2
     case 'B':
       sb = Serial.parseInt();
       break;
-    case 'c':
+    case 'c': // angle 3
     case 'C':
       sc = Serial.parseInt();
       break;
-    case 'f':
+    case 'f': // speed
     case 'F':
       speed = Serial.parseInt();
       if (speed < 0)
@@ -186,15 +186,15 @@ void loop()
         Serial << "Invalid Speed" << endl;
       }
       break;
-    case 'g':
+    case 'g': // ground location
     case 'G':
       ground = Serial.parseInt();
       break;
-    case 'h':
+    case 'h': // walk height
     case 'H':
       height = Serial.parseInt();
       break;
-    case 'w':
+    case 'w': // walk width
     case 'W':
       width = Serial.parseInt();
       break;
