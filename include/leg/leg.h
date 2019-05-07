@@ -75,7 +75,7 @@ public:
    * @param p Point to move leg to
    * @param speed (optional) time to reach target
   */
-  Leg &movePoint(Point &p, float p_speed = -1);
+  Leg &movePoint(Point p, float p_speed = -1);
 
   /**
    * move leg relative to reset position

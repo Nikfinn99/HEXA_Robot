@@ -1,6 +1,6 @@
 #include "leg/leg.h"
 
-Leg &Leg::movePoint(Point &p, float p_speed)
+Leg &Leg::movePoint(Point p, float p_speed)
 {
     m_valid_point = true;
 
