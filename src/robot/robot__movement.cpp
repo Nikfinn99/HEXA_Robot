@@ -234,5 +234,5 @@ void Robot::resetLegs(bool restart = false)
         } /* end switch step */
     }
 
-    updateStep(&step_start, &step_running, &step, step_speed);
+    updateStep(&step_start, &step_running, &step, step_speed, 6);
 }
