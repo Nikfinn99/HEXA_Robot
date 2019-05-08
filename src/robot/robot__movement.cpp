@@ -7,7 +7,7 @@ void Robot::walkSmooth(bool restart = false)
     static uint8_t step = 0;
     static unsigned long step_start;
     static bool step_running = false;
-    float step_speed = 0;
+    static float step_speed = 0;
 
     if (restart)
     {
@@ -30,7 +30,7 @@ void Robot::walkNormal(bool restart = false)
     static uint8_t step = 0;
     static unsigned long step_start;
     static bool step_running = false;
-    float step_speed = 0;
+    static float step_speed = 0;
 
     if (restart)
     {
@@ -128,7 +128,7 @@ void Robot::resetLegs(bool restart = false)
     static uint8_t step = 0;
     static unsigned long step_start;
     static bool step_running = false;
-    float step_speed = 0;
+    static float step_speed = 0;
 
     if (restart)
     {
