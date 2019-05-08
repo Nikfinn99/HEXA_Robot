@@ -15,7 +15,7 @@
 #define LEG_COMPENSATE_LENGTH
 
 /* define if servo angle should be inverted */
-#define SERVO_INV_ANG_1 -1
+#define SERVO_INV_ANG_1 1
 #define SERVO_INV_ANG_2 1
 #define SERVO_INV_ANG_3 -1
 
