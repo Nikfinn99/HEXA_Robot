@@ -6,11 +6,11 @@
 #include "leg/leg_objects.h"
 #include "robot/robot.h"
 
-int sx = 100, sy = 0, sz = 30;
+int sx = 0, sy = 0, sz = 0;
 int speed = 500;
 int height = 20;
 int ground = -50;
-int width = 50;
+int width = 75;
 
 Robot robot(leg_fr, leg_r, leg_br, leg_fl, leg_l, leg_bl);
 
@@ -23,7 +23,8 @@ void setup()
 
   /* setup Servos */
   servosAttach();
-  // servosReset<18>(servos_all);
+  // servosReset(servos_all);
+  
 
   /* turn on builtin led */
   pinMode(13, OUTPUT);
@@ -38,13 +39,13 @@ void setup()
 
   robot.setWalkWidth(width).setGroundLocation(ground).setWalkHeight(height).setSpeed(speed, speed / 2);
 
+  robot.setMode(WalkMode::RESET);
+
   Serial << "---SETUP-END---" << endl;
 }
 
 void loop()
 {
-  robot.update();
-
   /* parse incoming serial data */
   while (Serial.available())
   {
@@ -85,11 +86,12 @@ void loop()
   robot.setWalkHeight(height);
   robot.setGroundLocation(ground);
   robot.setWalkWidth(width);
+  robot.update();
 
   /*TEST LEG MOVEMENT*/
-  // leg_fl.moveX(sx);
-  // leg_fl.moveY(sy);
-  // leg_fl.moveZ(sz);
+  // leg_fr.moveRelX(sx);
+  // leg_fr.moveRelY(sy);
+  // leg_fr.moveRelZ(sz);
 
   /* INIT SERVOS */
   // Point p(SERVO_ANGLE_1, SERVO_ANGLE_2, SERVO_ANGLE_3);
@@ -100,5 +102,5 @@ void loop()
   // leg_l.moveAngle(p, false);
   // leg_bl.moveAngle(p, false);
 
-  delay(5);
+  delay(20);
 }
