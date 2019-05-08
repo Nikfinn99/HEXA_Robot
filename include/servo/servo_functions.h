@@ -28,8 +28,7 @@ void servosAttach();
  * @param servos A std::vector of servo Objects that should be reset
  * @return void
 */
-template <int size>
-void servosReset(IServo *(&servos)[size]);
+void servosReset(IServo *(&servos)[18]);
 
 /**
  * Calculate the required leg length even if the leg is not completely sideways

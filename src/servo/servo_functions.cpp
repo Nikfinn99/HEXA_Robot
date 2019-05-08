@@ -25,10 +25,9 @@ void servosAttach()
     servo_bl_3.attach(SERVO_BL_3);
 }
 
-template <int size>
-void servosReset(IServo *(&servos)[size])
+void servosReset(IServo *(&servos)[18])
 {
-    for (uint8_t i = 0; i < size; i++)
+    for (uint8_t i = 0; i < 18; i++)
     {
         IServo *servo = servos[i];
         switch (i % 3) // select correct angle depending on position in vector
