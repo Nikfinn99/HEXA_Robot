@@ -228,7 +228,14 @@ void loop()
   case ModeSelect::SERVO:
     if (current_servo != nullptr)
     {
-      current_servo->write(sa);
+      if (sa >= 0 && sa <= 180)
+      {
+        current_servo->write(sa);
+      }
+      else
+      {
+        Serial << "Invalid Angle" << endl;
+      }
     }
     break;
   }
