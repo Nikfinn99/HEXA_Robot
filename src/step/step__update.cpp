@@ -26,9 +26,9 @@ Step &Step::update()
         {
             m_step_running = false;
             m_finished = true;
-            return; /* abort */
         }
     }
+    return *this;
 }
 
 Step &Step::restart()
@@ -36,4 +36,5 @@ Step &Step::restart()
     m_step = 0;
     m_step_running = false;
     m_finished = false;
+    return *this;
 }
