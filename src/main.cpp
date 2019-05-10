@@ -44,7 +44,9 @@ void setup()
   leg_l.setInitialPose();
   leg_bl.setInitialPose();
 
-  robot.setWalkWidth(50).setGroundLocation(-50).setWalkHeight(20).setSpeed(500, 500 / 2).update();
+  robot.setWalkWidth(70).setGroundLocation(-50).setWalkHeight(20).setSpeed(500, 500 / 2).update();
+
+  delay(500);
 
   Serial << "---SETUP-END---" << endl;
 }
@@ -53,6 +55,7 @@ void loop()
 {
   static ModeSelect current_mode = ModeSelect::ROBOT;
   static ModeLeg current_leg_mode = ModeLeg::ABSOLUTE;
+  static WalkMode current_walk_mode = WalkMode::NORMAL;
   static Leg *current_leg = nullptr;
   static IServo *current_servo = nullptr;
   static int sx, sy, sz, sa, sb, sc, speed, ground, height, width;
@@ -66,7 +69,7 @@ void loop()
     case 'm': // CONTROL MODE
     case 'M':
     {
-      int m = Serial.parseInt();
+      int m = Serial.parseInt() - 1;
       switch (m)
       {
       case 0:
@@ -79,7 +82,25 @@ void loop()
         current_mode = ModeSelect::SERVO;
         break;
       default:
-        Serial << "Invalid Mode Selection" << endl;
+        Serial << "Invalid Mode Selection -> allowed: 1 - 3" << endl;
+        break;
+      }
+    }
+    break;
+    case 'n': // CONTROL MODE
+    case 'N':
+    {
+      int n = Serial.parseInt() - 1;
+      switch (n)
+      {
+      case 0:
+        current_walk_mode = WalkMode::NORMAL;
+        break;
+      case 1:
+        current_walk_mode = WalkMode::SMOOTH;
+        break;
+      default:
+        Serial << "Invalid walk-mode Selection -> allowed: 1 - 2" << endl;
         break;
       }
     }
@@ -87,7 +108,7 @@ void loop()
     case 'v': // LEG MODE
     case 'V':
     {
-      int v = Serial.parseInt();
+      int v = Serial.parseInt() - 1;
       switch (v)
       {
       case 0:
@@ -100,7 +121,7 @@ void loop()
         current_leg_mode = ModeLeg::ANGLE;
         break;
       default:
-        Serial << "Invalid Leg Mode Selection" << endl;
+        Serial << "Invalid Leg Mode Selection -> allowed: 1 - 3" << endl;
         break;
       }
     }
@@ -115,7 +136,7 @@ void loop()
       }
       else
       {
-        Serial << "Invalid Servo Selection" << endl;
+        Serial << "Invalid Servo Selection -> allowed: 1 - 18" << endl;
       }
     }
     break;
@@ -149,7 +170,7 @@ void loop()
       }
       else
       {
-        Serial << "Invalid Leg Selection" << endl;
+        Serial << "Invalid Leg Selection -> allowed: 1 to 6" << endl;
       }
     }
     break;
@@ -183,20 +204,35 @@ void loop()
       if (speed < 0)
       {
         speed = 500;
-        Serial << "Invalid Speed" << endl;
+        Serial << "Invalid Speed -> must be above zero" << endl;
       }
       break;
     case 'g': // ground location
     case 'G':
       ground = Serial.parseInt();
+      if (ground > 0)
+      {
+        ground = -50;
+        Serial << "Invalid Ground -> must be below zero" << endl;
+      }
       break;
     case 'h': // walk height
     case 'H':
       height = Serial.parseInt();
+      if (height < 0)
+      {
+        height = 20;
+        Serial << "Invalid Height -> must be above zero" << endl;
+      }
       break;
     case 'w': // walk width
     case 'W':
       width = Serial.parseInt();
+      if (width < 0)
+      {
+        width = 70;
+        Serial << "Invalid Width -> must be above zero" << endl;
+      }
       break;
     }
   }
@@ -204,22 +240,31 @@ void loop()
   switch (current_mode)
   {
   case ModeSelect::ROBOT:
-    robot.setGroundLocation(ground).setSpeed(speed, speed / 2).setWalkHeight(height).setWalkWidth(width).update();
+    robot
+        .setGroundLocation(ground)
+        .setSpeed(speed, speed / 2)
+        .setWalkHeight(height)
+        .setWalkWidth(width)
+        .setMode(current_walk_mode)
+        .update();
     break;
   case ModeSelect::LEG:
     if (current_leg != nullptr)
     {
       current_leg->setSpeed(speed);
+
+      Point p(sx, sy, sz);
+      Point angles(sa, sb, sc);
+
       switch (current_leg_mode)
       {
       case ModeLeg::ABSOLUTE:
-        current_leg->moveAbsX(sx).moveAbsY(sy).moveAbsZ(sz);
+        current_leg->movePoint(p);
         break;
       case ModeLeg::RELATIVE:
-        current_leg->moveRelX(sx).moveRelY(sy).moveRelZ(sz);
+        current_leg->moveRelPoint(p);
         break;
       case ModeLeg::ANGLE:
-        Point angles(sa, sb, sc);
         current_leg->moveAngle(angles);
         break;
       }
@@ -234,7 +279,8 @@ void loop()
       }
       else
       {
-        Serial << "Invalid Angle" << endl;
+        sa = 90;
+        Serial << "Invalid Servo Angle -> allowed: 0 - 180, resetting to 90deg ..." << endl;
       }
     }
     break;
