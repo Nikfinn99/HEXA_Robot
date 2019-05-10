@@ -1,14 +1,20 @@
 #include "step/step.h"
 
-Step &Step::setSpeed(float p_step_speed)
+Step &Step::setTime(float p_step_time)
 {
-     m_step_speed = p_step_speed;
-     return *this;
+    m_step_time = p_step_time;
+    return *this;
 }
 
-Step &Step::setMax(uint16_t p_max_step)
+Step &Step::setStart(uint16_t p_start_step)
 {
-    m_max_step = p_max_step;
+    m_start_step = p_start_step;
+    return *this;
+}
+
+Step &Step::setEnd(uint16_t p_end_step)
+{
+    m_end_step = p_end_step;
     return *this;
 }
 
@@ -18,7 +24,22 @@ Step &Step::setLoop(bool p_enable_loop)
     return *this;
 }
 
-float Step::getSpeed()
+float Step::getTime()
 {
-    return m_step_speed;
+    return m_step_time;
+}
+
+bool Step::isFinished()
+{
+    return m_finished;
+}
+
+bool Step::isRunning()
+{
+    return m_step_running;
+}
+
+u_int16_t Step::getStep()
+{
+    return m_step;
 }
