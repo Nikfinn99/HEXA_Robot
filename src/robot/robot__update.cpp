@@ -13,24 +13,22 @@ Robot &Robot::update()
     m_leg_l.setResetPoint(reset_point).update();
     m_leg_bl.setResetPoint(reset_point).update();
 
-    bool restart = m_walk_mode != m_last_walk_mode;
-
     switch (m_walk_mode)
     {
     case WalkMode::NONE:
         break;
     case WalkMode::RESET:
-        this->resetLegs(restart);
+        this->resetLegs();
         break;
     case WalkMode::NORMAL:
-        this->walkNormal(restart);
+        this->walkNormal();
         break;
     case WalkMode::SMOOTH:
-        this->walkSmooth(restart);
+        this->walkSmooth();
         break;
     }
 
-    m_last_walk_mode = m_walk_mode;
+    step.update();
 
     return *this;
 }

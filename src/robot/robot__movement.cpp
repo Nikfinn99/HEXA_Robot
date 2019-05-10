@@ -2,237 +2,210 @@
 
 // MOVEMENT FUNCTIONS
 
-void Robot::walkSmooth(bool restart = false)
+void Robot::walkSmooth()
 {
-    static uint8_t step = 0;
-    static unsigned long step_start;
-    static bool step_running = false;
-    float step_speed = 0;
+    step.setStart(0).setEnd(5).setLoop(true);
 
-    if (restart)
+    if (!step.isRunning())
     {
-        step = 0;
-        step_running = false;
-    }
-
-    if (!step_running)
-    {
-        switch (step)
+        switch (step.getStep())
         {
         }
     }
-
-    updateStep(&step_start, &step_running, &step, step_speed, 5, true);
 }
 
-void Robot::walkNormal(bool restart = false)
+void Robot::walkNormal()
 {
-    static uint8_t step = 0;
-    static unsigned long step_start;
-    static bool step_running = false;
-    float step_speed = 0;
+    step.setStart(0).setEnd(5).setLoop(true);
 
-    if (restart)
+    if (!step.isRunning())
     {
-        step = 0;
-        step_running = false;
-    }
-
-    if (!step_running)
-    {
-        switch (step)
+        switch (step.getStep())
         {
         case 0: /* OTHER legs DOWN */
 
-            step_speed = m_speed_fast; /* FAST */
+            step.setTime(m_speed_fast); /* FAST */
 
             /* RLR DOWN */
-            m_leg_fr.moveRelZ(0, step_speed);
-            m_leg_l.moveRelZ(0, step_speed);
-            m_leg_br.moveRelZ(0, step_speed);
+            m_leg_fr.moveRelZ(0, step.getTime());
+            m_leg_l.moveRelZ(0, step.getTime());
+            m_leg_br.moveRelZ(0, step.getTime());
 
             break;
 
         case 1: /* legs UP */
 
-            step_speed = m_speed_fast; /* FAST */
+            step.setTime(m_speed_fast); /* FAST */
 
             /* LRL UP */
-            m_leg_fl.moveRelZ(m_walk_height, step_speed);
-            m_leg_r.moveRelZ(m_walk_height, step_speed);
-            m_leg_bl.moveRelZ(m_walk_height, step_speed);
+            m_leg_fl.moveRelZ(m_walk_height, step.getTime());
+            m_leg_r.moveRelZ(m_walk_height, step.getTime());
+            m_leg_bl.moveRelZ(m_walk_height, step.getTime());
 
             break;
 
         case 2: /* legs FORWARD - OTHERS BACKWARD */
 
-            step_speed = m_speed_slow; /* SLOW */
+            step.setTime(m_speed_slow); /* SLOW */
 
             /* LRL FRONT */
-            m_leg_fl.moveRelY(50, step_speed);
-            m_leg_r.moveRelY(50, step_speed);
-            m_leg_bl.moveRelY(50, step_speed);
+            m_leg_fl.moveRelY(50, step.getTime());
+            m_leg_r.moveRelY(50, step.getTime());
+            m_leg_bl.moveRelY(50, step.getTime());
 
             /* RLR BACK */
-            m_leg_fr.moveRelY(-50, step_speed);
-            m_leg_l.moveRelY(-50, step_speed);
-            m_leg_br.moveRelY(-50, step_speed);
+            m_leg_fr.moveRelY(-50, step.getTime());
+            m_leg_l.moveRelY(-50, step.getTime());
+            m_leg_br.moveRelY(-50, step.getTime());
 
             break;
 
         case 3: /* legs DOWN */
 
-            step_speed = m_speed_fast; /* FAST */
+            step.setTime(m_speed_fast); /* FAST */
 
             /* LRL DOWN */
-            m_leg_fl.moveRelZ(0, step_speed);
-            m_leg_r.moveRelZ(0, step_speed);
-            m_leg_bl.moveRelZ(0, step_speed);
+            m_leg_fl.moveRelZ(0, step.getTime());
+            m_leg_r.moveRelZ(0, step.getTime());
+            m_leg_bl.moveRelZ(0, step.getTime());
 
             break;
 
         case 4: /* OTHER legs UP */
 
-            step_speed = m_speed_fast; /* FAST */
+            step.setTime(m_speed_fast); /* FAST */
 
             /* RLR UP */
-            m_leg_fr.moveRelZ(m_walk_height, step_speed);
-            m_leg_l.moveRelZ(m_walk_height, step_speed);
-            m_leg_br.moveRelZ(m_walk_height, step_speed);
+            m_leg_fr.moveRelZ(m_walk_height, step.getTime());
+            m_leg_l.moveRelZ(m_walk_height, step.getTime());
+            m_leg_br.moveRelZ(m_walk_height, step.getTime());
 
             break;
 
         case 5: /* legs BACKWARD - OTHER FORWARD */
 
-            step_speed = m_speed_slow; /* SLOW */
+            step.setTime(m_speed_slow); /* SLOW */
 
             /* LRL BACK */
-            m_leg_fl.moveRelY(-50, step_speed);
-            m_leg_r.moveRelY(-50, step_speed);
-            m_leg_bl.moveRelY(-50, step_speed);
+            m_leg_fl.moveRelY(-50, step.getTime());
+            m_leg_r.moveRelY(-50, step.getTime());
+            m_leg_bl.moveRelY(-50, step.getTime());
 
             /* RLR FRONT */
-            m_leg_fr.moveRelY(50, step_speed);
-            m_leg_l.moveRelY(50, step_speed);
-            m_leg_br.moveRelY(50, step_speed);
+            m_leg_fr.moveRelY(50, step.getTime());
+            m_leg_l.moveRelY(50, step.getTime());
+            m_leg_br.moveRelY(50, step.getTime());
 
             break;
         } /* end switch step */
     }
-
-    updateStep(&step_start, &step_running, &step, step_speed, 5, true);
 }
 
-void Robot::resetLegs(bool restart = false)
+void Robot::resetLegs()
 {
-    static uint8_t step = 0;
-    static unsigned long step_start;
-    static bool step_running = false;
-    float step_speed = 0;
+    step.setStart(0).setEnd(6).setLoop(false);
 
-    if (restart)
+    if (!step.isRunning())
     {
-        step = 0;
-        step_running = false;
-    }
-
-    if (!step_running)
-    {
-        switch (step)
+        switch (step.getStep())
         {
         case 0: /* ALL legs DOWN */
 
-            step_speed = m_speed_fast; /* FAST */
+            step.setTime(m_speed_fast); /* FAST */
 
             /* ALL DOWN */
-            m_leg_fl.moveRelZ(0, step_speed);
-            m_leg_l.moveRelZ(0, step_speed);
-            m_leg_bl.moveRelZ(0, step_speed);
-            m_leg_fr.moveRelZ(0, step_speed);
-            m_leg_r.moveRelZ(0, step_speed);
-            m_leg_br.moveRelZ(0, step_speed);
+            m_leg_fl.moveRelZ(0, step.getTime());
+            m_leg_l.moveRelZ(0, step.getTime());
+            m_leg_bl.moveRelZ(0, step.getTime());
+            m_leg_fr.moveRelZ(0, step.getTime());
+            m_leg_r.moveRelZ(0, step.getTime());
+            m_leg_br.moveRelZ(0, step.getTime());
 
             break;
 
         // EVERY SECOND LEG
         case 1: /* legs UP */
 
-            step_speed = m_speed_fast; /* FAST */
+            step.setTime(m_speed_fast); /* FAST */
 
             /* LRL UP */
-            m_leg_fl.moveRelZ(m_walk_height, step_speed);
-            m_leg_r.moveRelZ(m_walk_height, step_speed);
-            m_leg_bl.moveRelZ(m_walk_height, step_speed);
+            m_leg_fl.moveRelZ(m_walk_height, step.getTime());
+            m_leg_r.moveRelZ(m_walk_height, step.getTime());
+            m_leg_bl.moveRelZ(m_walk_height, step.getTime());
 
             break;
 
         case 2: /* RESET XY of legs */
 
-            step_speed = m_speed_slow; /* SLOW */
+            step.setTime(m_speed_slow); /* SLOW */
 
             /* LRL RESET */
             m_leg_fl
-                .moveRelX(0, step_speed)
-                .moveRelY(0, step_speed);
+                .moveRelX(0, step.getTime())
+                .moveRelY(0, step.getTime());
             m_leg_r
-                .moveRelX(0, step_speed)
-                .moveRelY(0, step_speed);
+                .moveRelX(0, step.getTime())
+                .moveRelY(0, step.getTime());
             m_leg_bl
-                .moveRelX(0, step_speed)
-                .moveRelY(0, step_speed);
+                .moveRelX(0, step.getTime())
+                .moveRelY(0, step.getTime());
 
             break;
 
         case 3: /* legs DOWN */
 
-            step_speed = m_speed_fast; /* FAST */
+            step.setTime(m_speed_fast); /* FAST */
 
             /* LRL DOWN */
-            m_leg_fl.moveRelZ(0, step_speed);
-            m_leg_r.moveRelZ(0, step_speed);
-            m_leg_bl.moveRelZ(0, step_speed);
+            m_leg_fl.moveRelZ(0, step.getTime());
+            m_leg_r.moveRelZ(0, step.getTime());
+            m_leg_bl.moveRelZ(0, step.getTime());
 
             break;
 
         /* REMAINING LEGS */
         case 4: /* OTHER legs UP */
 
-            step_speed = m_speed_fast; /* FAST */
+            step.setTime(m_speed_fast); /* FAST */
 
             /* RLR UP */
-            m_leg_fr.moveRelZ(m_walk_height, step_speed);
-            m_leg_l.moveRelZ(m_walk_height, step_speed);
-            m_leg_br.moveRelZ(m_walk_height, step_speed);
+            m_leg_fr.moveRelZ(m_walk_height, step.getTime());
+            m_leg_l.moveRelZ(m_walk_height, step.getTime());
+            m_leg_br.moveRelZ(m_walk_height, step.getTime());
             break;
 
         case 5: /* RESET XY of OTHER legs */
 
-            step_speed = m_speed_slow; /* SLOW */
+            step.setTime(m_speed_slow); /* SLOW */
 
             /* RLR RESET */
             m_leg_fr
-                .moveRelX(0, step_speed)
-                .moveRelY(0, step_speed);
+                .moveRelX(0, step.getTime())
+                .moveRelY(0, step.getTime());
             m_leg_l
-                .moveRelX(0, step_speed)
-                .moveRelY(0, step_speed);
+                .moveRelX(0, step.getTime())
+                .moveRelY(0, step.getTime());
             m_leg_br
-                .moveRelX(0, step_speed)
-                .moveRelY(0, step_speed);
+                .moveRelX(0, step.getTime())
+                .moveRelY(0, step.getTime());
             break;
 
         case 6: /* OTHER legs DOWN */
 
-            step_speed = m_speed_fast; /* FAST */
+            step.setTime(m_speed_fast); /* FAST */
 
             /* RLR DOWN */
-            m_leg_fr.moveRelZ(0, step_speed);
-            m_leg_l.moveRelZ(0, step_speed);
-            m_leg_br.moveRelZ(0, step_speed);
+            m_leg_fr.moveRelZ(0, step.getTime());
+            m_leg_l.moveRelZ(0, step.getTime());
+            m_leg_br.moveRelZ(0, step.getTime());
             break;
 
         } /* end switch step */
     }
+    
 
-    updateStep(&step_start, &step_running, &step, step_speed);
+    if (step.isFinished())
+    {
+        setMode(WalkMode::NONE);
+    }
 }

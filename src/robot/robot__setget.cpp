@@ -29,6 +29,10 @@ Robot &Robot::setSpeed(float slow, float fast)
 
 Robot &Robot::setMode(WalkMode mode)
 {
+    if (mode != m_walk_mode)
+    {
+        step.restart();
+    }
     m_walk_mode = mode;
     return *this;
 }
