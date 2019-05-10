@@ -33,7 +33,10 @@ Leg &Leg::moveRelPoint(Point &p, float p_speed)
 
 Leg &Leg::moveAbsX(float p_x, float p_speed)
 {
-    setSpeed(p_speed);
+    if (p_speed >= 0)
+    {
+        m_filter_x.setTimeParameter(p_speed);
+    }
 
     m_last_position.x = p_x;
 
@@ -44,7 +47,10 @@ Leg &Leg::moveAbsX(float p_x, float p_speed)
 
 Leg &Leg::moveAbsY(float p_y, float p_speed)
 {
-    setSpeed(p_speed);
+    if (p_speed >= 0)
+    {
+        m_filter_y.setTimeParameter(p_speed);
+    }
 
     m_last_position.y = p_y;
 
@@ -55,7 +61,10 @@ Leg &Leg::moveAbsY(float p_y, float p_speed)
 
 Leg &Leg::moveAbsZ(float p_z, float p_speed)
 {
-    setSpeed(p_speed);
+    if (p_speed >= 0)
+    {
+        m_filter_z.setTimeParameter(p_speed);
+    }
 
     m_last_position.z = p_z;
 
@@ -68,7 +77,10 @@ Leg &Leg::moveAbsZ(float p_z, float p_speed)
 
 Leg &Leg::moveRelX(float p_x, float p_speed)
 {
-    setSpeed(p_speed);
+    if (p_speed >= 0)
+    {
+        m_filter_x.setTimeParameter(p_speed);
+    }
 
     m_last_position.x = m_reset_point.x + p_x;
 
@@ -79,7 +91,10 @@ Leg &Leg::moveRelX(float p_x, float p_speed)
 
 Leg &Leg::moveRelY(float p_y, float p_speed)
 {
-    setSpeed(p_speed);
+    if (p_speed >= 0)
+    {
+        m_filter_y.setTimeParameter(p_speed);
+    }
 
     m_last_position.y = m_reset_point.y + p_y;
 
@@ -90,7 +105,10 @@ Leg &Leg::moveRelY(float p_y, float p_speed)
 
 Leg &Leg::moveRelZ(float p_z, float p_speed)
 {
-    setSpeed(p_speed);
+    if (p_speed >= 0)
+    {
+        m_filter_z.setTimeParameter(p_speed);
+    }
 
     m_last_position.z = m_reset_point.z + p_z;
 
