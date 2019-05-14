@@ -34,7 +34,7 @@ private:
   float m_speed_slow = 200;
   float m_speed_fast = 100;
 
-  /* MOVEMENT METHODS */
+  /* WALK METHODS */
   
   void walkSmooth();
   void walkNormal();
