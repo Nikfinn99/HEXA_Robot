@@ -15,7 +15,7 @@ Leg &Leg::setSpeed(float p_speed)
 
 Leg &Leg::setInitialPose()
 {
-    Point p(100, 0, 30);
+    Point p(70, 0, 0);
     setInitialPose(p);
     return *this;
 }

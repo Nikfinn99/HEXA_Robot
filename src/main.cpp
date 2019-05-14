@@ -7,10 +7,10 @@
 #include "robot/robot.h"
 
 int sx = 0, sy = 0, sz = 0;
-int speed = 500;
+int speed = 700;
 int height = 20;
-int ground = -50;
-int width = 75;
+int ground = -30;
+int width = 60;
 
 Robot robot(leg_fr, leg_r, leg_br, leg_fl, leg_l, leg_bl);
 
@@ -78,6 +78,9 @@ void loop()
       break;
     case 'f': /* enable walking */
       robot.setMode(WalkMode::NORMAL);
+      break;
+    case 't':
+      robot.setMode(WalkMode::TURN_OFF);
       break;
     }
   }
