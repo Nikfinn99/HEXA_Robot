@@ -10,8 +10,11 @@
 #define LEG_LEN_1 50
 #define LEG_LEN_2 57
 
+/* define max distance of leg from reset point (origin) */
+#define LEG_MAX_FROM_ORIGIN 30
+
 /* if calculations should include longer leg if y != 0 */
-/* uncomment to disable calculation */
+/* comment to disable calculation */
 #define LEG_COMPENSATE_LENGTH
 
 /* define if servo angle should be inverted */

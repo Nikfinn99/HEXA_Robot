@@ -31,11 +31,15 @@ private:
   float m_walk_height = 20;
   float m_walk_width = 50;
 
+  float m_x = 0;
+  float m_y = 0;
+  float m_turn = 0;
+
   float m_speed_slow = 200;
   float m_speed_fast = 100;
 
   /* WALK METHODS */
-  
+
   void walkSmooth();
   void walkNormal();
   void resetLegs();
@@ -54,6 +58,7 @@ public:
   Robot &setWalkParams(float ground_position, float walk_width, float walk_height);
   Robot &setSpeed(float slow, float fast);
   Robot &setMode(WalkMode mode);
+  Robot &move(float x, float y, float rot_z);
 
   /* GETTERS */
 

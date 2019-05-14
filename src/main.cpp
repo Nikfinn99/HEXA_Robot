@@ -253,6 +253,7 @@ void loop()
         .setSpeed(speed, speed / 2)
         .setWalkParams(ground, width, height)
         .setMode(current_walk_mode)
+        .move(sx, sy, sa)
         .update();
     break;
   case ModeSelect::LEG:
