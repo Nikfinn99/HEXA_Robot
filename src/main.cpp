@@ -240,8 +240,9 @@ void loop()
         Serial << "Invalid Width -> must be above zero" << endl;
       }
       break;
-    case 't':
-      robot.setMode(WalkMode::TURN_OFF);
+    case 't': // TURN OFF
+    case 'T':
+      current_walk_mode = WalkMode::TURN_OFF;
       break;
     }
   }
