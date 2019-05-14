@@ -55,7 +55,7 @@ void setup()
   leg_l.setInitialPose();
   leg_bl.setInitialPose();
 
-  robot.setWalkWidth(70).setGroundLocation(-50).setWalkHeight(20).setSpeed(500, 500 / 2).update();
+  robot.setWalkParams(ground, width, height).setSpeed(500, 500 / 2).update();
 
   delay(500);
 
@@ -250,10 +250,8 @@ void loop()
   {
   case ModeSelect::ROBOT:
     robot
-        .setGroundLocation(ground)
         .setSpeed(speed, speed / 2)
-        .setWalkHeight(height)
-        .setWalkWidth(width)
+        .setWalkParams(ground, width, height)
         .setMode(current_walk_mode)
         .update();
     break;

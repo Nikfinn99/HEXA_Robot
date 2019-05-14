@@ -51,9 +51,7 @@ public:
 
   /* SETTERS */
 
-  Robot &setGroundLocation(float ground_location);
-  Robot &setWalkWidth(float walk_width);
-  Robot &setWalkHeight(float walk_height);
+  Robot &setWalkParams(float ground_position, float walk_width, float walk_height);
   Robot &setSpeed(float slow, float fast);
   Robot &setMode(WalkMode mode);
 

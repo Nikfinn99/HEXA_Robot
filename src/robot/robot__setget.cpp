@@ -2,21 +2,22 @@
 
 /* SETTERS and GETTERS */
 
-Robot &Robot::setGroundLocation(float ground_location)
+Robot &Robot::setWalkParams(float ground_position, float walk_width, float walk_height)
 {
-    m_ground_location = ground_location;
-    return *this;
-}
-
-Robot &Robot::setWalkWidth(float walk_width)
-{
+    m_ground_location = ground_position;
     m_walk_width = walk_width;
-    return *this;
-}
-
-Robot &Robot::setWalkHeight(float walk_height)
-{
     m_walk_height = walk_height;
+
+
+    Point reset_point(m_walk_width, 0, m_ground_location);
+
+    m_leg_fr.setResetPoint(reset_point);
+    m_leg_r.setResetPoint(reset_point);
+    m_leg_br.setResetPoint(reset_point);
+    m_leg_fl.setResetPoint(reset_point);
+    m_leg_l.setResetPoint(reset_point);
+    m_leg_bl.setResetPoint(reset_point);
+    
     return *this;
 }
 
