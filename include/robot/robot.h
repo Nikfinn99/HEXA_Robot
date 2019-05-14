@@ -23,7 +23,7 @@ private:
   Leg &m_leg_l;
   Leg &m_leg_bl;
 
-  WalkMode m_walk_mode, m_last_walk_mode;
+  WalkMode m_walk_mode, m_exec_walk_mode;
 
   Step step;
 

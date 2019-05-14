@@ -11,7 +11,16 @@ Robot &Robot::update()
     m_leg_l.update();
     m_leg_bl.update();
 
-    switch (m_walk_mode)
+    if (m_exec_walk_mode != WalkMode::NONE && m_x == 0 && m_y == 0 && m_turn == 0)
+    {
+        m_exec_walk_mode = WalkMode::RESET;
+    }
+    else
+    {
+        m_exec_walk_mode = m_walk_mode;
+    }
+
+    switch (m_exec_walk_mode)
     {
     case WalkMode::NONE:
         break;
