@@ -6,11 +6,30 @@
 #include "leg/leg_objects.h"
 #include "robot/robot.h"
 
+enum class ModeSelect
+{
+  ROBOT,
+  LEG,
+  SERVO
+};
+
+enum class ModeLeg
+{
+  ABSOLUTE,
+  RELATIVE,
+  ANGLE
+};
+
+ModeSelect current_mode = ModeSelect::ROBOT;
+ModeLeg current_leg_mode = ModeLeg::ABSOLUTE;
+WalkMode current_walk_mode = WalkMode::RESET;
+
+Leg *current_leg = nullptr;
+IServo *current_servo = nullptr;
+
 int sx = 0, sy = 0, sz = 0;
-int speed = 700;
-int height = 20;
-int ground = -30;
-int width = 60;
+int sa = 90, sb = 90, sc = 90;
+int speed = 700, ground = -30, height = 20, width = 60;
 
 Robot robot(leg_fr, leg_r, leg_br, leg_fl, leg_l, leg_bl);
 
@@ -24,7 +43,6 @@ void setup()
   /* setup Servos */
   servosAttach();
   // servosReset(servos_all);
-  
 
   /* turn on builtin led */
   pinMode(13, OUTPUT);
@@ -37,7 +55,9 @@ void setup()
   leg_l.setInitialPose();
   leg_bl.setInitialPose();
 
-  robot.setWalkWidth(width).setGroundLocation(ground).setWalkHeight(height).setSpeed(speed, speed / 2);
+  robot.setWalkWidth(70).setGroundLocation(-50).setWalkHeight(20).setSpeed(500, 500 / 2).update();
+
+  delay(500);
 
   robot.setMode(WalkMode::RESET);
 
@@ -52,32 +72,173 @@ void loop()
     char c = Serial.read();
     switch (c)
     {
-    case 'x': /* x coordinate */
+    case 'm': // CONTROL MODE
+    case 'M':
+    {
+      int m = Serial.parseInt() - 1;
+      switch (m)
+      {
+      case 0:
+        current_mode = ModeSelect::ROBOT;
+        break;
+      case 1:
+        current_mode = ModeSelect::LEG;
+        break;
+      case 2:
+        current_mode = ModeSelect::SERVO;
+        break;
+      default:
+        Serial << "Invalid Mode Selection -> allowed: 1 - 3" << endl;
+        break;
+      }
+    }
+    break;
+    case 'n': // CONTROL MODE
+    case 'N':
+    {
+      int n = Serial.parseInt() - 1;
+      switch (n)
+      {
+      case 0:
+        current_walk_mode = WalkMode::NORMAL;
+        break;
+      case 1:
+        current_walk_mode = WalkMode::SMOOTH;
+        break;
+      default:
+        Serial << "Invalid walk-mode Selection -> allowed: 1 - 2" << endl;
+        break;
+      }
+    }
+    break;
+    case 'v': // LEG MODE
+    case 'V':
+    {
+      int v = Serial.parseInt() - 1;
+      switch (v)
+      {
+      case 0:
+        current_leg_mode = ModeLeg::ABSOLUTE;
+        break;
+      case 1:
+        current_leg_mode = ModeLeg::RELATIVE;
+        break;
+      case 2:
+        current_leg_mode = ModeLeg::ANGLE;
+        break;
+      default:
+        Serial << "Invalid Leg Mode Selection -> allowed: 1 - 3" << endl;
+        break;
+      }
+    }
+    break;
+    case 's': // SERVO ID
+    case 'S':
+    {
+      int s = Serial.parseInt() - 1;
+      if (s >= 0 && s < 18)
+      {
+        current_servo = servos_all[s];
+      }
+      else
+      {
+        Serial << "Invalid Servo Selection -> allowed: 1 - 18" << endl;
+      }
+    }
+    break;
+    case 'l': // LEG ID
+    case 'L':
+    {
+      int l = Serial.parseInt() - 1;
+      if (l >= 0 && l < 6)
+      {
+        switch (l)
+        {
+        case 0:
+          current_leg = &leg_fr;
+          break;
+        case 1:
+          current_leg = &leg_r;
+          break;
+        case 2:
+          current_leg = &leg_br;
+          break;
+        case 3:
+          current_leg = &leg_fl;
+          break;
+        case 4:
+          current_leg = &leg_l;
+          break;
+        case 5:
+          current_leg = &leg_bl;
+          break;
+        }
+      }
+      else
+      {
+        Serial << "Invalid Leg Selection -> allowed: 1 to 6" << endl;
+      }
+    }
+    break;
+    case 'x': // X
+    case 'X':
       sx = Serial.parseInt();
       break;
-    case 'y': /* y coordinate */
+    case 'y': // y
+    case 'Y':
       sy = Serial.parseInt();
       break;
-    case 'z': /* z coordinate */
+    case 'z': // z
+    case 'Z':
       sz = Serial.parseInt();
       break;
-    case 's': /* leg movement speed */
+    case 'a': // angle 1
+    case 'A':
+      sa = Serial.parseInt();
+      break;
+    case 'b': // angle 2
+    case 'B':
+      sb = Serial.parseInt();
+      break;
+    case 'c': // angle 3
+    case 'C':
+      sc = Serial.parseInt();
+      break;
+    case 'f': // speed
+    case 'F':
       speed = Serial.parseInt();
+      if (speed < 0)
+      {
+        speed = 500;
+        Serial << "Invalid Speed -> must be above zero" << endl;
+      }
       break;
-    case 'h': /* leg walk height */
-      height = Serial.parseInt();
-      break;
-    case 'g': /* leg ground location */
+    case 'g': // ground location
+    case 'G':
       ground = Serial.parseInt();
+      if (ground > 0)
+      {
+        ground = -50;
+        Serial << "Invalid Ground -> must be below zero" << endl;
+      }
       break;
-    case 'w': /* leg ground location */
+    case 'h': // walk height
+    case 'H':
+      height = Serial.parseInt();
+      if (height < 0)
+      {
+        height = 20;
+        Serial << "Invalid Height -> must be above zero" << endl;
+      }
+      break;
+    case 'w': // walk width
+    case 'W':
       width = Serial.parseInt();
-      break;
-    case 'r': /* reset all legs */
-      robot.setMode(WalkMode::RESET);
-      break;
-    case 'f': /* enable walking */
-      robot.setMode(WalkMode::NORMAL);
+      if (width < 0)
+      {
+        width = 70;
+        Serial << "Invalid Width -> must be above zero" << endl;
+      }
       break;
     case 't':
       robot.setMode(WalkMode::TURN_OFF);
@@ -85,25 +246,54 @@ void loop()
     }
   }
 
-  robot.setSpeed(speed, speed / 2);
-  robot.setWalkHeight(height);
-  robot.setGroundLocation(ground);
-  robot.setWalkWidth(width);
-  robot.update();
+  switch (current_mode)
+  {
+  case ModeSelect::ROBOT:
+    robot
+        .setGroundLocation(ground)
+        .setSpeed(speed, speed / 2)
+        .setWalkHeight(height)
+        .setWalkWidth(width)
+        .setMode(current_walk_mode)
+        .update();
+    break;
+  case ModeSelect::LEG:
+    if (current_leg != nullptr)
+    {
+      current_leg->setSpeed(speed);
 
-  /*TEST LEG MOVEMENT*/
-  // leg_fr.moveRelX(sx);
-  // leg_fr.moveRelY(sy);
-  // leg_fr.moveRelZ(sz);
+      Point p(sx, sy, sz);
+      Point angles(sa, sb, sc);
 
-  /* INIT SERVOS */
-  // Point p(SERVO_ANGLE_1, SERVO_ANGLE_2, SERVO_ANGLE_3);
-  // leg_fr.moveAngle(p, false);
-  // leg_r.moveAngle(p, false);
-  // leg_br.moveAngle(p, false);
-  // leg_fl.moveAngle(p, false);
-  // leg_l.moveAngle(p, false);
-  // leg_bl.moveAngle(p, false);
+      switch (current_leg_mode)
+      {
+      case ModeLeg::ABSOLUTE:
+        current_leg->movePoint(p);
+        break;
+      case ModeLeg::RELATIVE:
+        current_leg->moveRelPoint(p);
+        break;
+      case ModeLeg::ANGLE:
+        current_leg->moveAngle(angles);
+        break;
+      }
+    }
+    break;
+  case ModeSelect::SERVO:
+    if (current_servo != nullptr)
+    {
+      if (sa >= 0 && sa <= 180)
+      {
+        current_servo->write(sa);
+      }
+      else
+      {
+        sa = 90;
+        Serial << "Invalid Servo Angle -> allowed: 0 - 180, resetting to 90deg ..." << endl;
+      }
+    }
+    break;
+  }
 
   delay(20);
 }

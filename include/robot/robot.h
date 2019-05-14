@@ -1,6 +1,7 @@
 #pragma once
 
 #include "leg/leg.h"
+#include "step/step.h"
 #include <SerialStream.h>
 
 enum class WalkMode
@@ -24,6 +25,8 @@ private:
 
   WalkMode m_walk_mode, m_last_walk_mode;
 
+  Step step;
+
   float m_ground_location = -50;
   float m_walk_height = 20;
   float m_walk_width = 50;
@@ -31,16 +34,11 @@ private:
   float m_speed_slow = 200;
   float m_speed_fast = 100;
 
-  /**
-   * keeps track of step, if current step should be updated depending on time, max steps and if steps are looped
-  */
-  void updateStep(unsigned long *step_start, bool *step_running, uint8_t *step, uint16_t p_time, uint8_t p_max_step = 250, bool p_loop = false);
-
   /* MOVEMENT METHODS */
   
-  void walkSmooth(bool restart);
-  void walkNormal(bool restart);
-  void resetLegs(bool restart);
+  void walkSmooth();
+  void walkNormal();
+  void resetLegs();
   void turnOff();
 
 public:
