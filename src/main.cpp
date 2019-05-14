@@ -28,7 +28,7 @@ Leg *current_leg = nullptr;
 IServo *current_servo = nullptr;
 
 int sx = 0, sy = 0, sz = 0;
-int sa = 90, sb = 90, sc = 90;
+int sa = 0, sb = 0, sc = 0;
 int speed = 700, ground = -30, height = 20, width = 60;
 
 Robot robot(leg_fr, leg_r, leg_br, leg_fl, leg_l, leg_bl);
@@ -282,14 +282,15 @@ void loop()
   case ModeSelect::SERVO:
     if (current_servo != nullptr)
     {
-      if (sa >= 0 && sa <= 180)
+      int angle = sa + 90;
+      if (angle >= 0 && angle <= 180)
       {
-        current_servo->write(sa);
+        current_servo->write(angle);
       }
       else
       {
-        sa = 90;
-        Serial << "Invalid Servo Angle -> allowed: 0 - 180, resetting to 90deg ..." << endl;
+        sa = 0;
+        Serial << "Invalid Servo Angle -> allowed: -90 - +90, resetting to 0deg ..." << endl;
       }
     }
     break;
