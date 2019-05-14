@@ -10,7 +10,7 @@ Leg &Leg::movePoint(Point &p, float p_speed)
     }
 
     // copy parameter to internal variable to enable relative movement
-    m_last_position = p;
+    m_last_position = p.rotateZ(m_rotation);
 
     // apply last_position to leg movement
     setTargets();
