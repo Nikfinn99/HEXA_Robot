@@ -6,6 +6,7 @@
 enum class WalkMode
 {
   NONE, /* dummy mode does nothing */
+  TURN_OFF,
   RESET,
   NORMAL,
   SMOOTH
@@ -40,6 +41,7 @@ private:
   void walkSmooth(bool restart);
   void walkNormal(bool restart);
   void resetLegs(bool restart);
+  void turnOff();
 
 public:
   Robot(Leg &leg_fr, Leg &leg_r, Leg &leg_br, Leg &leg_fl, Leg &leg_l, Leg &leg_bl)                            /* references to legs as parameters */

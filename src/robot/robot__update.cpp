@@ -5,7 +5,7 @@
 Robot &Robot::update()
 {
     Point reset_point(m_walk_width, 0, m_ground_location);
-    
+
     m_leg_fr.setResetPoint(reset_point).update();
     m_leg_r.setResetPoint(reset_point).update();
     m_leg_br.setResetPoint(reset_point).update();
@@ -18,6 +18,9 @@ Robot &Robot::update()
     switch (m_walk_mode)
     {
     case WalkMode::NONE:
+        break;
+    case WalkMode::TURN_OFF:
+        this->turnOff();
         break;
     case WalkMode::RESET:
         this->resetLegs(restart);
