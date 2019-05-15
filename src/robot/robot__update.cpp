@@ -11,16 +11,20 @@ Robot &Robot::update()
     m_leg_l.update();
     m_leg_bl.update();
 
-    // changed mode OR moving and should stop moving -> reset
-    if ((m_exec_walk_mode != m_walk_mode) ||
-        (m_exec_walk_mode != WalkMode::NONE && m_x == 0 && m_y == 0 && m_turn == 0))
+    if (m_needs_reset)
     {
         m_exec_walk_mode = WalkMode::RESET;
     }
-    // not moving -> start moving
-    else if (m_exec_walk_mode == WalkMode::NONE)
+    else
     {
-        m_exec_walk_mode = m_walk_mode;
+        if (m_x != 0 || m_y != 0 || m_turn != 0 || m_walk_mode == WalkMode::TURN_OFF)
+        {
+            m_exec_walk_mode = m_walk_mode;
+        }
+        else
+        {
+            m_exec_walk_mode = WalkMode::NONE;
+        }
     }
 
     switch (m_exec_walk_mode)
