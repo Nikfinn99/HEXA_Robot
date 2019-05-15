@@ -49,6 +49,14 @@ public:
   Robot(Leg &leg_fr, Leg &leg_r, Leg &leg_br, Leg &leg_fl, Leg &leg_l, Leg &leg_bl)                            /* references to legs as parameters */
       : m_leg_fr(leg_fr), m_leg_r(leg_r), m_leg_br(leg_br), m_leg_fl(leg_fl), m_leg_l(leg_l), m_leg_bl(leg_bl) /* attach legs */
   {
+    servosAttach();
+
+    leg_fr.setInitialPose();
+    leg_r.setInitialPose();
+    leg_br.setInitialPose();
+    leg_fl.setInitialPose();
+    leg_l.setInitialPose();
+    leg_bl.setInitialPose();
   }
 
   ~Robot() {}

@@ -40,24 +40,11 @@ void setup()
 
   Serial << "---SETUP-START---" << endl;
 
-  /* setup Servos */
-  servosAttach();
-  // servosReset(servos_all);
-
   /* turn on builtin led */
   pinMode(13, OUTPUT);
   digitalWrite(13, HIGH);
 
-  leg_fr.setInitialPose();
-  leg_r.setInitialPose();
-  leg_br.setInitialPose();
-  leg_fl.setInitialPose();
-  leg_l.setInitialPose();
-  leg_bl.setInitialPose();
-
   robot.setWalkParams(ground, width, height).setSpeed(500, 500 / 2).update();
-
-  delay(500);
 
   robot.setMode(WalkMode::RESET);
 
