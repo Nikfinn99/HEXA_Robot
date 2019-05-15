@@ -22,7 +22,7 @@ enum class ModeLeg
 
 ModeSelect current_mode = ModeSelect::ROBOT;
 ModeLeg current_leg_mode = ModeLeg::ABSOLUTE;
-WalkMode current_walk_mode = WalkMode::RESET;
+WalkMode current_walk_mode = WalkMode::NORMAL;
 
 Leg *current_leg = nullptr;
 IServo *current_servo = nullptr;
@@ -251,11 +251,11 @@ void loop()
   {
   case ModeSelect::ROBOT:
     robot
+        .update()
         .setSpeed(speed, speed / 2)
         .setWalkParams(ground, width, height)
         .setMode(current_walk_mode)
-        .move(sx, sy, sa)
-        .update();
+        .move(sx, sy, sa);
     break;
   case ModeSelect::LEG:
     if (current_leg != nullptr)
