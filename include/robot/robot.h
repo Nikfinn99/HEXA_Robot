@@ -24,6 +24,7 @@ private:
   Leg &m_leg_bl;
 
   WalkMode m_walk_mode, m_exec_walk_mode;
+  bool m_needs_reset = false;
 
   Step step;
 
