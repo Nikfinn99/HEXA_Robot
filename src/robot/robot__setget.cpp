@@ -4,10 +4,15 @@
 
 Robot &Robot::move(float x, float y, float turn)
 {
+    // stopped walking and was prev moving
+    if (x == 0 && y == 0 && turn == 0 && (m_x != 0 || m_y != 0 || m_turn != 0))
+    {
+        m_needs_reset = true;
+    }
     m_x = x;
     m_y = y;
     m_turn = turn;
-    
+
     return *this;
 }
 
@@ -41,6 +46,7 @@ Robot &Robot::setMode(WalkMode mode)
     if (mode != m_walk_mode)
     {
         step.restart();
+        m_needs_reset = true;
     }
     m_walk_mode = mode;
     return *this;
