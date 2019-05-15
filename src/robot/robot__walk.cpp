@@ -118,6 +118,7 @@ void Robot::resetLegs()
     // set mode to none -> allow start of other movement
     if (step.isFinished())
     {
-        setMode(WalkMode::NONE);
+        m_exec_walk_mode = WalkMode::NONE;
+        m_needs_reset = false;
     }
 }
