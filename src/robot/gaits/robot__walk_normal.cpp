@@ -10,9 +10,9 @@ void Robot::walkNormal()
         Point p_r(m_x, m_y - m_turn, 0);
         Point p_br(m_x - m_turn * 0.5, m_y - m_turn * 0.5, 0);
 
-        Point p_fl(m_x + m_turn * 0.5, m_y + m_turn * 0.5, 0);
-        Point p_l(m_x, m_y + m_turn, 0);
-        Point p_bl(m_x - m_turn * 0.5, m_y + m_turn * 0.5, 0);
+        Point p_fl(-m_x - m_turn * 0.5, m_y + m_turn * 0.5, 0);
+        Point p_l(-m_x, m_y + m_turn, 0);
+        Point p_bl(-m_x + m_turn * 0.5, m_y + m_turn * 0.5, 0);
 
         p_fr.limitLengthXY(LEG_MAX_FROM_ORIGIN);
         p_r.limitLengthXY(LEG_MAX_FROM_ORIGIN);
