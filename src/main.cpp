@@ -247,6 +247,21 @@ void loop()
     }
   }
 
+  // DEBUG SERIAL INPUT
+  Serial << "Mode:" << (int)current_mode
+         << "walk mode:" << (int)current_walk_mode
+         << "leg mode:" << (int)current_leg_mode
+         << "x:" << sx
+         << "y:" << sy
+         << "z:" << sz
+         << "a:" << sa
+         << "b:" << sb
+         << "c:" << sc
+         << "ground:" << ground
+         << "height:" << height
+         << "width:" << width
+         << endl;
+
   switch (current_mode)
   {
   case ModeSelect::ROBOT:
@@ -279,21 +294,21 @@ void loop()
       }
     }
     break;
-  // case ModeSelect::SERVO:
-  //   if (current_servo != nullptr)
-  //   {
-  //     int angle = sa + 90;
-  //     if (angle >= 0 && angle <= 180)
-  //     {
-  //       current_servo->write(angle);
-  //     }
-  //     else
-  //     {
-  //       sa = 0;
-  //       Serial << "Invalid Servo Angle -> allowed: -90 - +90, resetting to 0deg ..." << endl;
-  //     }
-  //   }
-  //   break;
+    // case ModeSelect::SERVO:
+    //   if (current_servo != nullptr)
+    //   {
+    //     int angle = sa + 90;
+    //     if (angle >= 0 && angle <= 180)
+    //     {
+    //       current_servo->write(angle);
+    //     }
+    //     else
+    //     {
+    //       sa = 0;
+    //       Serial << "Invalid Servo Angle -> allowed: -90 - +90, resetting to 0deg ..." << endl;
+    //     }
+    //   }
+    //   break;
   }
 
   delay(20);
