@@ -29,14 +29,18 @@ IServo *current_servo = nullptr;
 
 int sx = 0, sy = 0, sz = 0;
 int sa = 0, sb = 0, sc = 0;
-int speed = 700, ground = -30, height = 20, width = 60;
+int speed = 700, ground = -30, height = 10, width = 70;
+
+Stream *input_stream = &Serial;
 
 Robot robot(leg_fr, leg_r, leg_br, leg_fl, leg_l, leg_bl);
 
 void setup()
 {
   Serial.begin(115200);
-  Serial1.begin(9600);
+  Serial.setTimeout(10);
+  Serial1.begin(115200);
+  Serial1.setTimeout(10);
   delay(1000);
 
   Serial << "---SETUP-START---" << endl;
@@ -67,26 +71,42 @@ void setup()
 
 void loop()
 {
+  
+  // DEBUG SERIAL INPUT
+  // Serial << "Mode:" << (int)current_mode
+  //        << "walk mode:" << (int)current_walk_mode
+  //        << "leg mode:" << (int)current_leg_mode
+  //        << "speed:" << speed
+  //        << "x:" << sx
+  //        << "y:" << sy
+  //        << "z:" << sz
+  //        << "a:" << sa
+  //        << "b:" << sb
+  //        << "c:" << sc
+  //        << "ground:" << ground
+  //        << "height:" << height
+  //        << "width:" << width
+  //        << endl;
+
+  if(Serial.available()){
+    input_stream = &Serial;
+  }
+  else if(Serial1.available()){
+    input_stream = &Serial1;
+  }
+
   /* parse incoming serial data */
   while (Serial.available() || Serial1.available())
   {
-    char c = 0;
     // read correct serial for input
-    if (Serial.available())
-    {
-      c = Serial.read();
-    }
-    else if (Serial1.available())
-    {
-      c = Serial1.read();
-    }
+    char c = input_stream->read();
 
     switch (c)
     {
     case 'm': // CONTROL MODE
     case 'M':
     {
-      int m = Serial.parseInt() - 1;
+      int m = input_stream->parseInt() - 1;
       switch (m)
       {
       case 0:
@@ -107,7 +127,7 @@ void loop()
     case 'n': // CONTROL MODE
     case 'N':
     {
-      int n = Serial.parseInt() - 1;
+      int n = input_stream->parseInt() - 1;
       switch (n)
       {
       case 0:
@@ -125,7 +145,7 @@ void loop()
     case 'v': // LEG MODE
     case 'V':
     {
-      int v = Serial.parseInt() - 1;
+      int v = input_stream->parseInt() - 1;
       switch (v)
       {
       case 0:
@@ -146,7 +166,7 @@ void loop()
     case 's': // SERVO ID
     case 'S':
     {
-      int s = Serial.parseInt() - 1;
+      int s = input_stream->parseInt() - 1;
       if (s >= 0 && s < 18)
       {
         current_servo = servos_all[s];
@@ -160,7 +180,7 @@ void loop()
     case 'l': // LEG ID
     case 'L':
     {
-      int l = Serial.parseInt() - 1;
+      int l = input_stream->parseInt() - 1;
       if (l >= 0 && l < 6)
       {
         switch (l)
@@ -193,31 +213,31 @@ void loop()
     break;
     case 'x': // X
     case 'X':
-      sx = Serial.parseInt();
+      sx = input_stream->parseInt();
       break;
     case 'y': // y
     case 'Y':
-      sy = Serial.parseInt();
+      sy = input_stream->parseInt();
       break;
     case 'z': // z
     case 'Z':
-      sz = Serial.parseInt();
+      sz = input_stream->parseInt();
       break;
     case 'a': // angle 1
     case 'A':
-      sa = Serial.parseInt();
+      sa = input_stream->parseInt();
       break;
     case 'b': // angle 2
     case 'B':
-      sb = Serial.parseInt();
+      sb = input_stream->parseInt();
       break;
     case 'c': // angle 3
     case 'C':
-      sc = Serial.parseInt();
+      sc = input_stream->parseInt();
       break;
     case 'f': // speed
     case 'F':
-      speed = Serial.parseInt();
+      speed = input_stream->parseInt();
       if (speed < 0)
       {
         speed = 500;
@@ -226,7 +246,7 @@ void loop()
       break;
     case 'g': // ground location
     case 'G':
-      ground = Serial.parseInt();
+      ground = input_stream->parseInt();
       if (ground > 0)
       {
         ground = -50;
@@ -235,7 +255,7 @@ void loop()
       break;
     case 'h': // walk height
     case 'H':
-      height = Serial.parseInt();
+      height = input_stream->parseInt();
       if (height < 0)
       {
         height = 20;
@@ -244,7 +264,7 @@ void loop()
       break;
     case 'w': // walk width
     case 'W':
-      width = Serial.parseInt();
+      width = input_stream->parseInt();
       if (width < 0)
       {
         width = 70;
@@ -257,21 +277,6 @@ void loop()
       break;
     }
   }
-
-  // DEBUG SERIAL INPUT
-  Serial << "Mode:" << (int)current_mode
-         << "walk mode:" << (int)current_walk_mode
-         << "leg mode:" << (int)current_leg_mode
-         << "x:" << sx
-         << "y:" << sy
-         << "z:" << sz
-         << "a:" << sa
-         << "b:" << sb
-         << "c:" << sc
-         << "ground:" << ground
-         << "height:" << height
-         << "width:" << width
-         << endl;
 
   switch (current_mode)
   {
