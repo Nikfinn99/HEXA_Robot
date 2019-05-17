@@ -36,6 +36,7 @@ Robot robot(leg_fr, leg_r, leg_br, leg_fl, leg_l, leg_bl);
 void setup()
 {
   Serial.begin(115200);
+  Serial1.begin(9600);
   delay(1000);
 
   Serial << "---SETUP-START---" << endl;
@@ -67,9 +68,19 @@ void setup()
 void loop()
 {
   /* parse incoming serial data */
-  while (Serial.available())
+  while (Serial.available() || Serial1.available())
   {
-    char c = Serial.read();
+    char c = 0;
+    // read correct serial for input
+    if (Serial.available())
+    {
+      c = Serial.read();
+    }
+    else if (Serial1.available())
+    {
+      c = Serial1.read();
+    }
+
     switch (c)
     {
     case 'm': // CONTROL MODE
