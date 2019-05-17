@@ -84,9 +84,9 @@ void loop()
       case 1:
         current_mode = ModeSelect::LEG;
         break;
-      case 2:
-        current_mode = ModeSelect::SERVO;
-        break;
+      // case 2:
+      //   current_mode = ModeSelect::SERVO;
+      //   break;
       default:
         Serial << "Invalid Mode Selection -> allowed: 1 - 3" << endl;
         break;
@@ -279,21 +279,21 @@ void loop()
       }
     }
     break;
-  case ModeSelect::SERVO:
-    if (current_servo != nullptr)
-    {
-      int angle = sa + 90;
-      if (angle >= 0 && angle <= 180)
-      {
-        current_servo->write(angle);
-      }
-      else
-      {
-        sa = 0;
-        Serial << "Invalid Servo Angle -> allowed: -90 - +90, resetting to 0deg ..." << endl;
-      }
-    }
-    break;
+  // case ModeSelect::SERVO:
+  //   if (current_servo != nullptr)
+  //   {
+  //     int angle = sa + 90;
+  //     if (angle >= 0 && angle <= 180)
+  //     {
+  //       current_servo->write(angle);
+  //     }
+  //     else
+  //     {
+  //       sa = 0;
+  //       Serial << "Invalid Servo Angle -> allowed: -90 - +90, resetting to 0deg ..." << endl;
+  //     }
+  //   }
+  //   break;
   }
 
   delay(20);
