@@ -22,12 +22,22 @@
 #define SERVO_INV_ANG_2 1
 #define SERVO_INV_ANG_3 -1
 
-/* define max rotation distance of servos from zero point */
+/* define limits for serial parsing */
+#define SERIAL_GROUND_MIN -70
+#define SERIAL_GROUND_MAX 0
+#define SERIAL_WIDTH_MIN 50
+#define SERIAL_WIDTH_MAX 80
+#define SERIAL_HEIGHT_MIN 5
+#define SERIAL_HEIGHT_MAX 30
+#define SERIAL_SPEED_MIN 200
+#define SERIAL_SPEED_MAX 2000
+
+/* define min and max rotation of servos */
 #define SERVO_MIN_1 70
-#define SERVO_MIN_2 0
-#define SERVO_MIN_3 0
 #define SERVO_MAX_1 110
+#define SERVO_MIN_2 0
 #define SERVO_MAX_2 180
+#define SERVO_MIN_3 0
 #define SERVO_MAX_3 180
 
 /* define pins for servos */
