@@ -11,8 +11,8 @@
 enum class ModeSelect
 {
   ROBOT,
-  LEG,
-  SERVO
+  LEG/*,
+  SERVO*/
 };
 
 enum class ModeLeg
