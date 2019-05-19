@@ -1,5 +1,14 @@
 #include "servo/servo_objects.h"
 
+/**
+ * @brief implement servo_objects.h
+ * 
+ * check servo_objects.h for documentation
+ * 
+ * @author Niklas Holzwarth
+ * @version 1.0 20.03.19
+*/
+
 //servos right
 PWMServo servo_fr_1;
 Servo servo_fr_2;

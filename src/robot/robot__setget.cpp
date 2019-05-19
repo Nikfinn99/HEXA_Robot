@@ -1,6 +1,15 @@
 #include "robot/robot.h"
 
-/* SETTERS and GETTERS */
+/**
+ * @brief implement setters and getters from robot.h
+ * 
+ * check robot.h for documentation
+ * 
+ * @author Niklas Holzwarth
+ * @version 1.0 20.03.19
+*/
+
+/* SETTER */
 
 Robot &Robot::move(float x, float y, float turn)
 {
@@ -41,7 +50,7 @@ Robot &Robot::setSpeed(float slow, float fast)
     return *this;
 }
 
-Robot &Robot::setMode(WalkMode mode)
+Robot &Robot::setMode(ModeWalk mode)
 {
     if (mode != m_walk_mode)
     {
@@ -69,7 +78,7 @@ float Robot::getWalkHeight()
     return m_walk_height;
 }
 
-WalkMode Robot::getMode()
+ModeWalk Robot::getMode()
 {
     return m_walk_mode;
 }

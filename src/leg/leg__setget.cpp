@@ -1,5 +1,14 @@
 #include "leg/leg.h"
 
+/**
+ * @brief implement setters and getters from leg.h
+ * 
+ * check leg.h for documentation
+ * 
+ * @author Niklas Holzwarth
+ * @version 1.0 20.03.19
+*/
+
 /* SETTER */
 
 Leg &Leg::setSpeed(float p_speed)

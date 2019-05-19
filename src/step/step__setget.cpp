@@ -1,5 +1,14 @@
 #include "step/step.h"
 
+/**
+ * @brief implement setters and getters from step.h
+ * 
+ * check step.h for documentation
+ * 
+ * @author Niklas Holzwarth
+ * @version 1.0 20.03.19
+*/
+
 Step &Step::setTime(float p_step_time)
 {
     m_step_time = p_step_time;

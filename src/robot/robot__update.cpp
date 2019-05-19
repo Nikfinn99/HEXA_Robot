@@ -1,6 +1,13 @@
 #include "robot/robot.h"
 
-/* UPDATE */
+/**
+ * @brief implement update method from robot.h
+ * 
+ * check robot.h for documentation
+ * 
+ * @author Niklas Holzwarth
+ * @version 1.0 20.03.19
+*/
 
 Robot &Robot::update()
 {
@@ -11,36 +18,37 @@ Robot &Robot::update()
     m_leg_l.update();
     m_leg_bl.update();
 
-    if (m_needs_reset)
+    if (m_needs_reset)// perform reset if gait has changed or robot stopped moving
     {
-        m_exec_walk_mode = WalkMode::RESET;
+        m_exec_walk_mode = ModeWalk::RESET;
     }
     else
     {
-        if (m_x != 0 || m_y != 0 || m_turn != 0 || m_walk_mode == WalkMode::TURN_OFF)
+        // move
+        if (m_x != 0 || m_y != 0 || m_turn != 0 || m_walk_mode == ModeWalk::TURN_OFF)
         {
             m_exec_walk_mode = m_walk_mode;
         }
-        else
+        else // do not move
         {
-            m_exec_walk_mode = WalkMode::NONE;
+            m_exec_walk_mode = ModeWalk::NONE;
         }
     }
 
     switch (m_exec_walk_mode)
     {
-    case WalkMode::NONE:
+    case ModeWalk::NONE:
         break;
-    case WalkMode::TURN_OFF:
+    case ModeWalk::TURN_OFF:
         this->turnOff();
         break;
-    case WalkMode::RESET:
+    case ModeWalk::RESET:
         this->resetLegs();
         break;
-    case WalkMode::NORMAL:
+    case ModeWalk::NORMAL:
         this->walkNormal();
         break;
-    case WalkMode::SMOOTH:
+    case ModeWalk::SMOOTH:
         this->walkSmooth();
         break;
     }

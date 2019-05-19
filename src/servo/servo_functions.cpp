@@ -1,5 +1,14 @@
 #include "servo/servo_functions.h"
 
+/**
+ * @brief implement servo_functions.h
+ * 
+ * check servo_functions.h for documentation
+ * 
+ * @author Niklas Holzwarth
+ * @version 1.0 20.03.19
+*/
+
 void servosAttach()
 {
     //setup SERVOS RIGHT

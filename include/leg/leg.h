@@ -1,5 +1,12 @@
 #pragma once
 
+/**
+ * @brief Leg class, handles movement of servos, absolute and relative movement and interpolation between different points
+ * 
+ * @author Niklas Holzwarth
+ * @version 1.0 19.05.19
+*/
+
 #include "IServo.h"
 #include <Point.h>
 #include <FilterLinear.h>
@@ -7,24 +14,19 @@
 
 class Leg
 {
-private:
-  IServo *(&m_servos)[3];
-
-  const float m_offset, m_length1, m_length2, m_rotation;
-  const bool m_is_left;
-
-  Point m_reset_point, m_last_position;
-  bool m_valid_point = false;
-
-  FilterLinear m_filter_x, m_filter_y, m_filter_z;
-
-  /**
-   * set target of filters according to last_position
-   * only sets target if in the past an abolute point has been set
-  */
-  void setTargets();
-
 public:
+  /**
+   * contructor for Leg class
+   * 
+   * attaches servos to leg and sets constant parameters: offset, length 1 and 2, leg rotation, and if leg is on left side
+   * 
+   * @param servos reference to an array of pointers to IServo, attaches all three servos
+   * @param offset lenght of leg segment that turns by servo 1
+   * @param length1 length of upper leg segment
+   * @param length2 length of lower leg segment
+   * @param rotation global rotation of leg around z axis
+   * @param (left) if leg is on left side of robot, inverts rotation of servo 1, defaults to false
+  */
   Leg(IServo *(&servos)[3], float offset, float length1, float length2, float rotation, bool left = false)
       : m_servos(servos), m_offset(offset), m_length1(length1), m_length2(length2), m_rotation(rotation), m_is_left(left) {}
 
@@ -38,7 +40,7 @@ public:
   /**
    * returns the reset point
   */
- Point getResetPoint();
+  Point getResetPoint();
 
   /**
    * returns the current leg speed
@@ -86,7 +88,7 @@ public:
   Leg &moveRelPoint(Point &p, float p_speed = -1);
 
   /**
-   * move single coorinate absolute without affecting other coorinates
+   * move single coordinate absolute without affecting other coorinates
    * @param p_ new coordinate position
    * @param (p_speed) optional speed to reach target
   */
@@ -95,7 +97,7 @@ public:
   Leg &moveAbsZ(float p_z, float p_speed = -1);
 
   /**
-   * move single coorinate relative to reset position
+   * move single coordinate relative to reset position
    * @param p_ new coordinate position
    * @param (p_speed) optional speed to reach target
   */
@@ -119,4 +121,24 @@ public:
    * updates filters and if point is valid moves to interpolated point 
   */
   Leg &update();
+
+private:
+  // reference to array of pointers
+  IServo *(&m_servos)[3];
+
+  // constant leg paramters
+  const float m_offset, m_length1, m_length2, m_rotation;
+  const bool m_is_left;
+
+  Point m_reset_point, m_last_position;
+  bool m_valid_point = false;
+
+  // Filters for linear interpolation
+  FilterLinear m_filter_x, m_filter_y, m_filter_z;
+
+  /**
+   * set target of filters according to last_position
+   * only sets target if in the past an abolute point has been set
+  */
+  void setTargets();
 };

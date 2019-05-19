@@ -1,17 +1,13 @@
 #include "robot/robot.h"
 
-// MOVEMENT FUNCTIONS
-
-void Robot::turnOff()
-{
-    Point p(80, 0, 0);
-    m_leg_fr.setSpeed(m_speed_slow).movePoint(p);
-    m_leg_fl.setSpeed(m_speed_slow).movePoint(p);
-    m_leg_r.setSpeed(m_speed_slow).movePoint(p);
-    m_leg_l.setSpeed(m_speed_slow).movePoint(p);
-    m_leg_br.setSpeed(m_speed_slow).movePoint(p);
-    m_leg_bl.setSpeed(m_speed_slow).movePoint(p);
-}
+/**
+ * @brief implement resetLegs method from robot.h
+ * 
+ * check robot.h for documentation
+ * 
+ * @author Niklas Holzwarth
+ * @version 1.0 20.03.19
+*/
 
 void Robot::resetLegs()
 {
@@ -118,7 +114,7 @@ void Robot::resetLegs()
     // set mode to none -> allow start of other movement
     if (step.isFinished())
     {
-        m_exec_walk_mode = WalkMode::NONE;
+        m_exec_walk_mode = ModeWalk::NONE;
         m_needs_reset = false;
     }
 }

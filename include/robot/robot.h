@@ -1,10 +1,17 @@
 #pragma once
 
+/**
+ * @brief Robot class, handles movement of legs, switching between gaits and leg positions
+ * 
+ * @author Niklas Holzwarth
+ * @version 1.0 19.05.19
+*/
+
 #include "leg/leg.h"
 #include "step/step.h"
 #include <SerialStream.h>
 
-enum class WalkMode
+enum class ModeWalk
 {
   NONE, /* dummy mode does nothing */
   TURN_OFF,
@@ -16,6 +23,8 @@ enum class WalkMode
 class Robot
 {
 private:
+  // references to all attached legs
+  // initialized in contructor
   Leg &m_leg_fr;
   Leg &m_leg_r;
   Leg &m_leg_br;
@@ -23,9 +32,10 @@ private:
   Leg &m_leg_l;
   Leg &m_leg_bl;
 
-  WalkMode m_walk_mode, m_exec_walk_mode;
+  ModeWalk m_walk_mode, m_exec_walk_mode;
   bool m_needs_reset = false;
 
+  // object for keeping track of current step
   Step step;
 
   float m_ground_location = -50;
@@ -47,8 +57,14 @@ private:
   void turnOff();
 
 public:
-  Robot(Leg &leg_fr, Leg &leg_r, Leg &leg_br, Leg &leg_fl, Leg &leg_l, Leg &leg_bl)                            /* references to legs as parameters */
-      : m_leg_fr(leg_fr), m_leg_r(leg_r), m_leg_br(leg_br), m_leg_fl(leg_fl), m_leg_l(leg_l), m_leg_bl(leg_bl) /* attach legs */
+  /**
+   * constructor for Robot class
+   * 
+   * all legs that should be attached to robot are passed as reference
+   * and saved in m_leg_ references
+  */
+  Robot(Leg &leg_fr, Leg &leg_r, Leg &leg_br, Leg &leg_fl, Leg &leg_l, Leg &leg_bl)
+      : m_leg_fr(leg_fr), m_leg_r(leg_r), m_leg_br(leg_br), m_leg_fl(leg_fl), m_leg_l(leg_l), m_leg_bl(leg_bl)
   {
   }
 
@@ -56,21 +72,69 @@ public:
 
   /* SETTERS */
 
+  /**
+   * set walk params
+   * this also sets the reset position of attached legs
+   * 
+   * @param ground_position distance of leg below robot (for walking negative)
+   * @param walk_width horizontal distance of leg from robot
+   * @param walk_height vertical distance the leg raises for each step
+  */
   Robot &setWalkParams(float ground_position, float walk_width, float walk_height);
+
+  /**
+   * set two different movmement speeds of robot for different moves
+   * lower values mean faster speeds as speed is the time in ms between each move
+   * 
+   * @param slow slower movement speed
+   * @param fast faster movement speed
+  */
   Robot &setSpeed(float slow, float fast);
-  Robot &setMode(WalkMode mode);
+
+  /**
+   * set walk mode (gait) of robot
+   * changing the gait will first perform an reset before a change is possible
+   * 
+   * @param mode new gait to walk
+  */
+  Robot &setMode(ModeWalk mode);
+
+  /**
+   * move in x and y direction and rotate around z axis
+   * 
+   * @param x sideways movement
+   * @param y forward / backward movement
+   * @param rot_z turn left / right (positive -> right)
+  */
   Robot &move(float x, float y, float rot_z);
 
   /* GETTERS */
 
+  /**
+   * @return current ground location (usually negative for walking)
+  */
   float getGroundLocation();
+
+  /**
+   * @return current walk width
+  */
   float getWalkWidth();
+
+  /**
+   * walk height equals the vertical distance the leg raises for each step
+   * 
+   * @return current walk height
+  */
   float getWalkHeight();
-  WalkMode getMode();
+
+  /**
+   * @return current walk mode (gait)
+  */
+  ModeWalk getMode();
 
   /**
    * update method of robot
-   * update all attached legs and perform walking method
+   * update all attached legs and perform walking
   */
   Robot &update();
 };

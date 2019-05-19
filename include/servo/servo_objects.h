@@ -1,14 +1,24 @@
 #pragma once
 
+/**
+ * @brief construct all servo objects and organize them into arrays
+ * 
+ * @author Niklas Holzwarth
+ * @version 1.0 20.03.19
+*/
+
 #include <Arduino.h>
 #include "IServo.h"
 #include <Servo.h>
 #include <PWMServo.h>
 
+/* OBJECTS FOR SERVOS */
+// servos share interface IServo for interchangable use
+
 //servos right
 extern PWMServo servo_fr_1;
-extern Servo servo_fr_2;
-extern Servo servo_fr_3;
+extern Servo servo_fr_2; // pin dows not support pwm servo
+extern Servo servo_fr_3; // pin dows not support pwm servo
 extern PWMServo servo_r_1;
 extern PWMServo servo_r_2;
 extern PWMServo servo_r_3;
@@ -26,6 +36,10 @@ extern PWMServo servo_l_3;
 extern PWMServo servo_bl_1;
 extern PWMServo servo_bl_2;
 extern PWMServo servo_bl_3;
+
+/* array of pointers for easy handling */
+// these arrays are passed by reference inside the program
+// array of pointers is used inside legs
 
 extern IServo *servos_all[18];
 

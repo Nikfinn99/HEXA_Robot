@@ -6,6 +6,8 @@
 #include "leg/leg_objects.h"
 #include "robot/robot.h"
 
+/* ENUMS FOR USE IN MAIN */
+
 enum class ModeSelect
 {
   ROBOT,
@@ -20,20 +22,29 @@ enum class ModeLeg
   ANGLE
 };
 
-ModeSelect current_mode = ModeSelect::ROBOT;
-ModeLeg current_leg_mode = ModeLeg::ABSOLUTE;
-WalkMode current_walk_mode = WalkMode::NORMAL;
+/* VARIABLES FOR USE IN MAIN (SERIAL PARSING) */
 
-Leg *current_leg = nullptr;
-IServo *current_servo = nullptr;
+// default modes of robot movement
+ModeSelect current_mode = ModeSelect::ROBOT/*M:1-2*/;
+ModeLeg current_leg_mode = ModeLeg::ABSOLUTE/*V:1-3*/;
+ModeWalk current_walk_mode = ModeWalk::NORMAL/*N:1-2*/;
 
-int sx = 0, sy = 0, sz = 0;
-int sa = 0, sb = 0, sc = 0;
-int speed = 700, ground = -30, height = 10, width = 70;
+// pointers to current leg and current servo
+Leg *current_leg = nullptr/*L:1-6*/;
+IServo *current_servo = nullptr/*S:1-18*/;
 
+// parameters that can be set over serial
+int sx = 0/*X*/, sy = 0/*Y*/, sz = 0/*Z*/;
+int sa = 0/*A*/, sb = 0/*B*/, sc = 0/*C*/;
+int speed = 700/*F*/, ground = -30/*G*/, height = 10/*H*/, width = 70/*W*/;
+
+// pointer to serial input stream
 Stream *input_stream = &Serial;
 
+// create Robot object with all legs attached
 Robot robot(leg_fr, leg_r, leg_br, leg_fl, leg_l, leg_bl);
+
+/* SETUP EVERYTHING */
 
 void setup()
 {
@@ -45,14 +56,15 @@ void setup()
 
   Serial << "---SETUP-START---" << endl;
 
-  /* setup Servos */
-  servosAttach();
-  // servosReset(servos_all);
-
   /* turn on builtin led */
   pinMode(13, OUTPUT);
   digitalWrite(13, HIGH);
 
+  /* setup Servos */
+  servosAttach();
+
+  /* set default pose of leg 
+    this is above ground in a secure spot to not strain servos */
   leg_fr.setInitialPose();
   leg_r.setInitialPose();
   leg_br.setInitialPose();
@@ -60,19 +72,21 @@ void setup()
   leg_l.setInitialPose();
   leg_bl.setInitialPose();
 
-  robot.setWalkParams(ground, width, height).setSpeed(500, 500 / 2).update();
+  /* init robot with default parameters and update once */
+  robot.setWalkParams(ground, width, height).setSpeed(speed, speed / 2).update();
 
-  delay(500);
-
-  robot.setMode(WalkMode::RESET);
+  /* reset legs at start of program */
+  robot.setMode(ModeWalk::RESET);
 
   Serial << "---SETUP-END---" << endl;
 }
 
+/* INFINITE LOOP called every 20 ms */
+
 void loop()
 {
-  
-  // DEBUG SERIAL INPUT
+
+  /* DEBUG SERIAL INPUT */
   // Serial << "Mode:" << (int)current_mode
   //        << "walk mode:" << (int)current_walk_mode
   //        << "leg mode:" << (int)current_leg_mode
@@ -88,19 +102,23 @@ void loop()
   //        << "width:" << width
   //        << endl;
 
-  if(Serial.available()){
+  /* select input from either Serial or Serial1 and set pointer to input stream */
+  if (Serial.available())
+  {
     input_stream = &Serial;
   }
-  else if(Serial1.available()){
+  else if (Serial1.available())
+  {
     input_stream = &Serial1;
   }
 
   /* parse incoming serial data */
   while (Serial.available() || Serial1.available())
   {
-    // read correct serial for input
+    // read serial data from input stream
     char c = input_stream->read();
 
+    /* switch serial data and select correct parsing */
     switch (c)
     {
     case 'm': // CONTROL MODE
@@ -115,34 +133,36 @@ void loop()
       case 1:
         current_mode = ModeSelect::LEG;
         break;
+        /* DISABLED FOR SECURITY */
       // case 2:
       //   current_mode = ModeSelect::SERVO;
       //   break;
       default:
-        Serial << "Invalid Mode Selection -> allowed: 1 - 3" << endl;
+        Serial << "Invalid Mode Selection -> allowed: 1 - 2" << endl;
         break;
       }
     }
     break;
-    case 'n': // CONTROL MODE
+    case 'n': // SELECT WALK MODE (GAIT)
     case 'N':
     {
       int n = input_stream->parseInt() - 1;
       switch (n)
       {
       case 0:
-        current_walk_mode = WalkMode::NORMAL;
+        current_walk_mode = ModeWalk::NORMAL;
         break;
       case 1:
-        current_walk_mode = WalkMode::SMOOTH;
+        current_walk_mode = ModeWalk::SMOOTH;
         break;
+        /* extend here for more gaits */
       default:
         Serial << "Invalid walk-mode Selection -> allowed: 1 - 2" << endl;
         break;
       }
     }
     break;
-    case 'v': // LEG MODE
+    case 'v': // SELECT LEG MODE (only applies if current_mode == LEG)
     case 'V':
     {
       int v = input_stream->parseInt() - 1;
@@ -163,21 +183,22 @@ void loop()
       }
     }
     break;
-    case 's': // SERVO ID
-    case 'S':
-    {
-      int s = input_stream->parseInt() - 1;
-      if (s >= 0 && s < 18)
-      {
-        current_servo = servos_all[s];
-      }
-      else
-      {
-        Serial << "Invalid Servo Selection -> allowed: 1 - 18" << endl;
-      }
-    }
-    break;
-    case 'l': // LEG ID
+    /* DISABLED FOR SECURITY */
+    // case 's': // SERVO ID
+    // case 'S':
+    // {
+    //   int s = input_stream->parseInt() - 1;
+    //   if (s >= 0 && s < 18)
+    //   {
+    //     current_servo = servos_all[s];
+    //   }
+    //   else
+    //   {
+    //     Serial << "Invalid Servo Selection -> allowed: 1 - 18" << endl;
+    //   }
+    // }
+    // break;
+    case 'l': // Select LEG from ID (only applies if current_mode == LEG)
     case 'L':
     {
       int l = input_stream->parseInt() - 1;
@@ -235,62 +256,67 @@ void loop()
     case 'C':
       sc = input_stream->parseInt();
       break;
-    case 'f': // speed
+    case 'f': // speed of movement
     case 'F':
       speed = input_stream->parseInt();
-      if (speed < 0)
+      if (speed < SERIAL_SPEED_MIN || speed > SERIAL_SPEED_MAX)
       {
         speed = 500;
-        Serial << "Invalid Speed -> must be above zero" << endl;
+        Serial << "Invalid Speed -> allowed:" << SERIAL_SPEED_MIN << "to" << SERIAL_SPEED_MAX << endl;
       }
       break;
     case 'g': // ground location
     case 'G':
       ground = input_stream->parseInt();
-      if (ground > 0)
+      if (ground < SERIAL_GROUND_MIN || ground > SERIAL_GROUND_MAX)
       {
-        ground = -50;
-        Serial << "Invalid Ground -> must be below zero" << endl;
+        ground = (SERIAL_GROUND_MIN + SERIAL_GROUND_MAX) / 2; // reset to average
+        Serial << "Invalid Ground -> allowed:" << SERIAL_GROUND_MIN << "to" << SERIAL_GROUND_MAX << endl;
       }
       break;
     case 'h': // walk height
     case 'H':
       height = input_stream->parseInt();
-      if (height < 0)
+      if (height < SERIAL_HEIGHT_MIN || height > SERIAL_HEIGHT_MAX)
       {
-        height = 20;
-        Serial << "Invalid Height -> must be above zero" << endl;
+        height = (SERIAL_HEIGHT_MIN + SERIAL_HEIGHT_MAX) / 2; // reset to average
+        Serial << "Invalid Height -> allowed:" << SERIAL_HEIGHT_MIN << "to" << SERIAL_HEIGHT_MAX << endl;
       }
       break;
     case 'w': // walk width
     case 'W':
       width = input_stream->parseInt();
-      if (width < 0)
+      if (width < SERIAL_WIDTH_MIN || width > SERIAL_WIDTH_MAX)
       {
-        width = 70;
-        Serial << "Invalid Width -> must be above zero" << endl;
+        width = (SERIAL_WIDTH_MIN + SERIAL_WIDTH_MAX) / 2; // reset to average
+        Serial << "Invalid Width -> allowed:" << SERIAL_WIDTH_MIN << "to" << SERIAL_WIDTH_MAX << endl;
       }
       break;
     case 't': // TURN OFF
     case 'T':
-      current_walk_mode = WalkMode::TURN_OFF;
+      current_walk_mode = ModeWalk::TURN_OFF;
       break;
     }
   }
 
   switch (current_mode)
   {
+    /* control entire robot 
+      set params from serial and move*/
   case ModeSelect::ROBOT:
     robot
-        .update()
         .setSpeed(speed, speed / 2)
         .setWalkParams(ground, width, height)
         .setMode(current_walk_mode)
-        .move(sx, sy, sa);
+        .move(sx, sy, sa)
+        .update();
     break;
+    /* control single leg selected from serial*/
   case ModeSelect::LEG:
+    // check if current_leg is not null
     if (current_leg != nullptr)
     {
+      // set speed of current leg
       current_leg->setSpeed(speed);
 
       Point p(sx, sy, sz);
@@ -298,18 +324,23 @@ void loop()
 
       switch (current_leg_mode)
       {
+        // move leg in absolute coordinate system
       case ModeLeg::ABSOLUTE:
         current_leg->movePoint(p);
         break;
+        // move leg relative to internal reset point
+        // reset point is set using functions in robot and initialized with default parameters
       case ModeLeg::RELATIVE:
         current_leg->moveRelPoint(p);
         break;
+        // move leg by angles of individual servos
       case ModeLeg::ANGLE:
         current_leg->moveAngle(angles);
         break;
       }
     }
     break;
+    /* DISABLED FOR SECURITY */
     // case ModeSelect::SERVO:
     //   if (current_servo != nullptr)
     //   {
@@ -327,5 +358,5 @@ void loop()
     //   break;
   }
 
-  delay(20);
+  delay(1);
 }

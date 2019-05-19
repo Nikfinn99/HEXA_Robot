@@ -1,5 +1,14 @@
 #include "robot/robot.h"
 
+/**
+ * @brief implement walkNormal method from robot.h
+ * 
+ * check robot.h for documentation
+ * 
+ * @author Niklas Holzwarth
+ * @version 1.0 20.03.19
+*/
+
 void Robot::walkNormal()
 {
     step.setStart(0).setEnd(5).setLoop(true);

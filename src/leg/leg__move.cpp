@@ -1,5 +1,16 @@
 #include "leg/leg.h"
 
+/**
+ * @brief implement movement methods from leg.h
+ * 
+ * check leg.h for documentation
+ * 
+ * @author Niklas Holzwarth
+ * @version 1.0 20.03.19
+*/
+
+/* ABSOLUTE COORDINATE */
+
 Leg &Leg::movePoint(Point p, float p_speed)
 {
     m_valid_point = true;
@@ -16,20 +27,6 @@ Leg &Leg::movePoint(Point p, float p_speed)
     setTargets();
     return *this;
 }
-
-Leg &Leg::moveRelPoint(Point &p, float p_speed)
-{
-    setSpeed(p_speed);
-
-    // add relative point to reset position to get new position
-    m_last_position = m_reset_point + p;
-
-    // apply last_position to leg movement
-    setTargets();
-    return *this;
-}
-
-/* ABSOLUTE COORDINATE */
 
 Leg &Leg::moveAbsX(float p_x, float p_speed)
 {
@@ -74,6 +71,18 @@ Leg &Leg::moveAbsZ(float p_z, float p_speed)
 }
 
 /* RELATIVE COORDINATE */
+
+Leg &Leg::moveRelPoint(Point &p, float p_speed)
+{
+    setSpeed(p_speed);
+
+    // add relative point to reset position to get new position
+    m_last_position = m_reset_point + p;
+
+    // apply last_position to leg movement
+    setTargets();
+    return *this;
+}
 
 Leg &Leg::moveRelX(float p_x, float p_speed)
 {
