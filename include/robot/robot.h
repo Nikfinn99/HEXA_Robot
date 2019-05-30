@@ -11,9 +11,17 @@
 #include "step/step.h"
 #include <SerialStream.h>
 
+/**
+ * different walk modes of robot
+ * - NONE is a mode to handle reset state correctly and is used whenever the robot should not walk
+ * - TURN_OFF to raise all legs of the ground before the user can cut power
+ * - RESET reset legs to known positions on ground and between changes of walk modes
+ * - NORMAL default walking with always 3 legs on ground and 3 legs raised
+ * - SMOOTH (not implemented) walking with 5 legs on ground and 1 leg raised
+*/
 enum class ModeWalk
 {
-  NONE, /* dummy mode does nothing */
+  NONE,
   TURN_OFF,
   RESET,
   NORMAL,
