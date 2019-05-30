@@ -1,5 +1,9 @@
 #pragma once
 
+/* when you want to assemble the robot correctly enable this to attach servo plates correctly */
+/* uncomment to enable */
+// #define ASSEMBLE_ONLY_RESET
+
 /* define reset positions for servos */
 #define SERVO_ANGLE_1 90
 #define SERVO_ANGLE_2 90
