@@ -7,9 +7,9 @@ Robot robot(leg_fr, leg_r, leg_br, leg_fl, leg_l, leg_bl);
 
 void setup()
 {
-  Serial.begin(115200);
+  Serial.begin(115200); // PC USB
   Serial.setTimeout(10);
-  Serial1.begin(115200);
+  Serial1.begin(115200); // Bluetooth
   Serial1.setTimeout(10);
   delay(1000);
 
